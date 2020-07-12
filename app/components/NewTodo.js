@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, TextInput, Animated } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Animated,
+  LayoutAnimation,
+} from "react-native";
 import Modal from "react-native-modal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
@@ -10,9 +17,9 @@ export default function NewTodo({ item, open, close, prefixedList }) {
   const [{ lists, current }, setState] = useMgmt();
 
   const timeframeOptions = [
-    { text: "💅 today", id: "today" },
-    { text: "☂️ tomorrow", id: "tomorrow" },
-    { text: "🔮 someday", id: "someday" },
+    { emoji: "💅", id: "today" },
+    { emoji: "☂️", id: "tomorrow" },
+    { emoji: "🔮", id: "someday" },
   ];
   const [timeframeSelected, setTimeframeSelected] = useState(0);
   const [inputText, setInputText] = useState("");
@@ -24,6 +31,7 @@ export default function NewTodo({ item, open, close, prefixedList }) {
   const toggleTimeframeSelected = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setTimeframeSelected((timeframeSelected + 1) % 3);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
 
   const timeframeScaleAnim = useRef(new Animated.Value(1)).current;
@@ -54,6 +62,7 @@ export default function NewTodo({ item, open, close, prefixedList }) {
         [listToUpdateId]: { ...lists[listToUpdateId], items: newListItems },
       },
     });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     handleClose();
   };
   return (
@@ -83,8 +92,13 @@ export default function NewTodo({ item, open, close, prefixedList }) {
             <TextInput
               value={inputText}
               style={styles.input}
-              onChangeText={(text) => setInputText(text)}
-              placeholder="Type something here..."
+              onChangeText={(text) => {
+                LayoutAnimation.configureNext(
+                  LayoutAnimation.Presets.easeInEaseOut
+                );
+                setInputText(text);
+              }}
+              placeholder="someday I will..."
               autoFocus
             />
           </View>
@@ -110,7 +124,7 @@ export default function NewTodo({ item, open, close, prefixedList }) {
                         styles.createButtonText,
                       ]}
                     >
-                      create
+                      add
                     </Text>
                   </Animated.View>
                 </TouchableOpacity>
@@ -132,8 +146,13 @@ export default function NewTodo({ item, open, close, prefixedList }) {
                         { transform: [{ scale: timeframeScaleAnim }] },
                       ]}
                     >
+                      <Text
+                        style={[styles.generalButtonText, styles.emojiText]}
+                      >
+                        {timeframeOptions[timeframeSelected].emoji}{" "}
+                      </Text>
                       <Text style={[styles.generalButtonText]}>
-                        {timeframeOptions[timeframeSelected].text}
+                        {timeframeOptions[timeframeSelected].id}
                       </Text>
                     </Animated.View>
                   </TouchableOpacity>
@@ -182,7 +201,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row-reverse",
     justifyContent: "space-between",
-    alignItems: "stretch",
+    alignItems: "center",
     marginTop: 15,
     width: "100%",
   },
@@ -192,15 +211,22 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     borderColor: "#333",
     borderWidth: 3,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
   generalButtonText: {
     fontSize: 22,
     fontFamily: "DMSans_700Bold",
     color: "#333",
   },
+  emojiText: {
+    fontSize: 35,
+  },
   timeframeButton: {
     backgroundColor: "rgba(0,0,0,0.05)",
     borderWidth: 3,
+    paddingVertical: 8,
     borderColor: "lightgray",
   },
   createButton: {

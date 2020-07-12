@@ -40,7 +40,7 @@ export default function Todo({ todo, toggleDone }) {
       LayoutAnimation.configureNext({
         duration: 500,
         create: { type: "linear", property: "opacity" },
-        update: { type: "spring", springDamping: 0.8 },
+        update: { type: "spring", springDamping: 0.75 },
         delete: { type: "linear", property: "opacity" },
       });
       toggleDone({ todoId: todo.id });
