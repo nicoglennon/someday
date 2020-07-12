@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  ImageBackground,
-  StyleSheet,
-  Image,
-  View,
-  Text,
-  ScrollView,
-  SafeAreaView,
-} from "react-native";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
 import ListsList from "../components/ListsList";
 import AddItemBtn from "../components/AddItemBtn";
 import { useMgmt } from "../hooks/useMgmt";
@@ -27,6 +19,7 @@ export default function ListsScreen({ navigation }) {
     <View style={styles.safeArea}>
       <ScrollView style={{ paddingTop: headerHeight }}>
         <View style={styles.listsScreen}>
+          <Text style={styles.versionText}>1.0</Text>
           <ListsList
             current={state.current}
             lists={state.lists}
@@ -44,10 +37,16 @@ const styles = StyleSheet.create({
     flex: 1,
     // justifyContent: "flex-start",
     width: "100%",
+    // backgroundColor: "black",
   },
   listsScreen: {
     paddingLeft: 15,
     paddingRight: 15,
-    // backgroundColor: "black",
+    alignItems: "center",
+  },
+  versionText: {
+    color: "lightgrey",
+    fontFamily: "DMSans_700Bold",
+    marginBottom: 10,
   },
 });

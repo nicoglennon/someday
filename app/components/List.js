@@ -75,15 +75,17 @@ const styles = StyleSheet.create({
     fontSize: 50,
   },
   listBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: "#333333",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   badgeText: {
-    marginTop: 2,
-    textAlign: "center",
-    fontSize: 21,
+    fontSize: 18,
+    marginLeft: 1,
     color: "white",
   },
 });
