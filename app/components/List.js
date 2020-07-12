@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     padding: 24,
-    paddingTop: 40,
+    paddingTop: "10%",
     marginBottom: 12,
     textAlign: "left",
     backgroundColor: "rgba(0,0,0,0.05)",
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   listChild: {},
   listEmoji: {
-    fontSize: 42,
+    fontSize: 50,
   },
   listBadge: {
     width: 32,

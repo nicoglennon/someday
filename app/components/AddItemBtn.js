@@ -2,8 +2,9 @@ import React, { useRef, useState } from "react";
 import { Text, View, StyleSheet, Animated, Keyboard } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import NewTodo from "./NewTodo";
+import * as Haptics from "expo-haptics";
 
-export default function AddItemBtn() {
+export default function AddItemBtn({ handleNavigate, prefixedList }) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [newTodoOpen, setNewTodoOpen] = useState(false);
 
@@ -19,7 +20,6 @@ export default function AddItemBtn() {
       useNativeDriver: true,
     }).start();
   };
-  const expandButton = () => {};
   const handleCloseNewTodo = () => {
     Keyboard.dismiss();
     setNewTodoOpen(false);
@@ -30,6 +30,7 @@ export default function AddItemBtn() {
         onPressIn={animateOnPressInList}
         onPressOut={animateOnPressOutList}
         onPress={() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           setNewTodoOpen(true);
         }}
         activeOpacity={0.75}
@@ -39,7 +40,12 @@ export default function AddItemBtn() {
         >
           <Text style={styles.addItemText}>✏️</Text>
         </Animated.View>
-        <NewTodo open={newTodoOpen} close={handleCloseNewTodo} />
+        <NewTodo
+          open={newTodoOpen}
+          close={handleCloseNewTodo}
+          handleNavigate={handleNavigate}
+          prefixedList={prefixedList}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -50,20 +56,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     justifyContent: "flex-end",
-    marginBottom: 20,
+    position: "absolute",
+    alignSelf: "center",
+    bottom: 40,
   },
   addItem: {
     paddingLeft: 20,
     paddingRight: 20,
-    height: 80,
-    width: 80,
+    height: 70,
+    width: 70,
     backgroundColor: "lightgrey",
     borderRadius: 40,
     alignItems: "center",
     justifyContent: "center",
   },
   addItemText: {
-    fontSize: 35,
+    fontSize: 30,
     fontFamily: "DMSans_700Bold",
   },
 });

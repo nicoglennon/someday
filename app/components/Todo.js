@@ -1,26 +1,61 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Animated,
+  useWindowDimensions,
+  LayoutAnimation,
 } from "react-native";
+import * as Haptics from "expo-haptics";
+import { Easing } from "react-native-reanimated";
 
 export default function Todo({ todo, toggleDone }) {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const deleteScaleAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const [checkedOff, setCheckedOff] = useState(false);
 
-  const handleToggleDone = () => {
-    toggleDone({ todoId: todo.id });
+  const handleDeleteItem = () => {
+    setCheckedOff(true);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Animated.parallel(
+      [
+        Animated.timing(deleteScaleAnim, {
+          toValue: 1.15,
+          useNativeDriver: true,
+          duration: 100,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          useNativeDriver: true,
+          duration: 100,
+        }),
+      ],
+      {
+        easing: Easing.ease,
+      }
+    ).start(() => {
+      LayoutAnimation.configureNext({
+        duration: 500,
+        create: { type: "linear", property: "opacity" },
+        update: { type: "spring", springDamping: 0.8 },
+        delete: { type: "linear", property: "opacity" },
+      });
+      toggleDone({ todoId: todo.id });
+    });
   };
+
   const animateOnPressInList = () => {
-    Animated.spring(fadeAnim, {
+    Animated.spring(scaleAnim, {
       toValue: 0.95,
       useNativeDriver: true,
     }).start();
   };
+
   const animateOnPressOutList = () => {
-    Animated.spring(fadeAnim, {
+    Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
     }).start();
@@ -28,7 +63,7 @@ export default function Todo({ todo, toggleDone }) {
   return (
     <TouchableOpacity
       activeOpacity={0.75}
-      onPress={handleToggleDone}
+      onPress={handleDeleteItem}
       onPressIn={animateOnPressInList}
       onPressOut={animateOnPressOutList}
     >
@@ -36,15 +71,18 @@ export default function Todo({ todo, toggleDone }) {
         style={[
           styles.todo,
           ...[todo.done ? styles.completed : []],
-          { transform: [{ scale: fadeAnim }] },
+          { transform: [{ scale: scaleAnim }, { scale: deleteScaleAnim }] },
+          { opacity: fadeAnim },
         ]}
       >
         <View style={styles.todoChild}>
           <Text style={styles.todoText}>{todo.text}</Text>
         </View>
-        <View style={styles.todoChild}>
-          <Text style={styles.todoText}>{todo.done ? "🟪" : "⬜️"}</Text>
-        </View>
+        {checkedOff && (
+          <View style={styles.todoChild}>
+            {/* <Text style={styles.todoText}>X</Text> */}
+          </View>
+        )}
       </Animated.View>
     </TouchableOpacity>
   );
@@ -53,12 +91,12 @@ export default function Todo({ todo, toggleDone }) {
 const styles = StyleSheet.create({
   todo: {
     flex: 1,
-    padding: 18,
+    padding: 20,
     marginTop: 10,
     marginBottom: 0,
     textAlign: "left",
     backgroundColor: "rgba(0,0,0,0.05)",
-    borderRadius: 8,
+    borderRadius: 30,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

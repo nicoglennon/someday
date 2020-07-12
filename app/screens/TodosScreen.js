@@ -3,10 +3,16 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import TodoList from "../components/TodoList";
 import { useMgmt } from "../hooks/useMgmt";
 import { useHeaderHeight } from "@react-navigation/stack";
+import AddItemBtn from "../components/AddItemBtn";
 
 export default function TodosScreen() {
   const [{ lists, current }, setState] = useMgmt();
   const headerHeight = useHeaderHeight();
+
+  const handleNavigate = (listId) => {
+    setState({ ...state, current: listId });
+    navigation.navigate("List");
+  };
 
   const toggleDone = ({ todoId }) => {
     const oldTodos = lists[current].items;
@@ -33,6 +39,7 @@ export default function TodosScreen() {
           />
         </View>
       </ScrollView>
+      <AddItemBtn handleNavigate={handleNavigate} prefixedList={current} />
     </View>
   );
 }
@@ -46,6 +53,7 @@ const styles = StyleSheet.create({
   todosScreen: {
     paddingLeft: 15,
     paddingRight: 15,
+    paddingBottom: 220,
   },
   titleArea: {
     alignItems: "center",

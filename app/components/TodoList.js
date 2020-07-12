@@ -5,9 +5,11 @@ import Todo from "./Todo";
 export default function TodoList({ todos, toggleDone }) {
   return (
     <View style={styles.todolist}>
-      {todos.map((todo) => (
-        <Todo key={todo.id} todo={todo} toggleDone={toggleDone} />
-      ))}
+      {todos
+        .filter((todo) => !todo.done)
+        .map((todo) => (
+          <Todo key={todo.id} todo={todo} toggleDone={toggleDone} />
+        ))}
     </View>
   );
 }

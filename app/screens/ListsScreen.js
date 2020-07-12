@@ -34,7 +34,7 @@ export default function ListsScreen({ navigation }) {
           />
         </View>
       </ScrollView>
-      <AddItemBtn />
+      <AddItemBtn handleNavigate={handleNavigate} />
     </View>
   );
 }
@@ -42,11 +42,12 @@ export default function ListsScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    justifyContent: "flex-start",
+    // justifyContent: "flex-start",
     width: "100%",
   },
   listsScreen: {
     paddingLeft: 15,
     paddingRight: 15,
+    // backgroundColor: "black",
   },
 });
