@@ -5,13 +5,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
-  useWindowDimensions,
   LayoutAnimation,
 } from "react-native";
 import * as Haptics from "expo-haptics";
 import { Easing } from "react-native-reanimated";
+import { useMgmt } from "../hooks/useMgmt";
 
 export default function Todo({ todo, toggleDone }) {
+  const [{ theme }] = useMgmt();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const deleteScaleAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -51,6 +52,7 @@ export default function Todo({ todo, toggleDone }) {
     Animated.spring(scaleAnim, {
       toValue: 0.95,
       useNativeDriver: true,
+      speed: 20,
     }).start();
   };
 
@@ -58,6 +60,7 @@ export default function Todo({ todo, toggleDone }) {
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
+      speed: 20,
     }).start();
   };
   return (
@@ -69,45 +72,53 @@ export default function Todo({ todo, toggleDone }) {
     >
       <Animated.View
         style={[
-          styles.todo,
-          ...[todo.done ? styles.completed : []],
+          styles.todo(theme),
           { transform: [{ scale: scaleAnim }, { scale: deleteScaleAnim }] },
           { opacity: fadeAnim },
         ]}
       >
-        <View style={styles.todoChild}>
-          <Text style={styles.todoText}>{todo.text}</Text>
+        <View style={styles.todoBigChild}>
+          <Text style={styles.todoText(theme)}>{todo.text}</Text>
         </View>
-        {checkedOff && (
-          <View style={styles.todoChild}>
-            {/* <Text style={styles.todoText}>X</Text> */}
-          </View>
-        )}
+        {/* {checkedOff && ( */}
+        {/* <View style={[styles.todoChild, styles.moreButton(theme)]}>
+          <Text style={[styles.todoText, styles.moreButtonText(theme)]}>⋯</Text>
+        </View> */}
+        {/* )} */}
       </Animated.View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  todo: {
+  todo: (theme) => ({
     flex: 1,
     padding: 20,
     marginTop: 10,
     marginBottom: 0,
     textAlign: "left",
-    backgroundColor: "rgba(0,0,0,0.05)",
+    backgroundColor:
+      theme === "dark" ? "rgba(120,190,255,0.15)" : "rgba(0,0,0,0.05)",
     borderRadius: 30,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-  },
-  completed: {
-    backgroundColor: "#e1c0ff",
-  },
-  todoText: {
-    fontSize: 20,
+    alignItems: "flex-start",
+  }),
+  todoText: (theme) => ({
+    fontSize: 19,
     fontFamily: "DMSans_400Regular",
-    color: "#333333",
+    color: theme === "dark" ? "#fff" : "#333",
+  }),
+  todoBigChild: {
+    flex: 1,
   },
-  todoChild: {},
+  // moreButton: (theme) => ({
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   borderRadius: 30,
+  // }),
+  // moreButtonText: (theme) => ({
+  //   color: theme === "dark" ? "darkgray" : "lightgray",
+  //   fontSize: 24,
+  // }),
 });

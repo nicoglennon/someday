@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,7 @@ import { useMgmt } from "../hooks/useMgmt";
 import shortid from "shortid";
 
 export default function NewTodo({ item, open, close, prefixedList }) {
-  const [{ lists, current }, setState] = useMgmt();
+  const [{ lists, current, theme }, setState] = useMgmt();
 
   const timeframeOptions = [
     { emoji: "💅", id: "today" },
@@ -31,7 +31,10 @@ export default function NewTodo({ item, open, close, prefixedList }) {
   const toggleTimeframeSelected = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setTimeframeSelected((timeframeSelected + 1) % 3);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    LayoutAnimation.configureNext({
+      duration: 250,
+      update: { type: "spring", springDamping: 0.7 },
+    });
   };
 
   const timeframeScaleAnim = useRef(new Animated.Value(1)).current;
@@ -40,12 +43,14 @@ export default function NewTodo({ item, open, close, prefixedList }) {
     Animated.spring(anim, {
       toValue: 0.95,
       useNativeDriver: true,
+      speed: 20,
     }).start();
   };
   const animateOnPressOut = (anim) => {
     Animated.spring(anim, {
       toValue: 1,
       useNativeDriver: true,
+      speed: 20,
     }).start();
   };
 
@@ -55,7 +60,9 @@ export default function NewTodo({ item, open, close, prefixedList }) {
       prefixedList || timeframeOptions[timeframeSelected].id;
     const oldListItems = lists[listToUpdateId].items;
     const newListItems = [...oldListItems, newItem];
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setState({
+      theme,
       current: listToUpdateId,
       lists: {
         ...lists,
@@ -75,27 +82,30 @@ export default function NewTodo({ item, open, close, prefixedList }) {
         animationInTiming={600}
         animationIn={{
           from: {
-            translateY: 200,
+            translateY: 300,
           },
           to: {
             translateY: 0,
           },
-          easing: "ease-out-quint",
+          easing: "ease-out-expo",
         }}
         style={styles.modal}
         onBackdropPress={handleClose}
+        backdropColor="#111"
         avoidKeyboard
       >
-        <View style={styles.content}>
+        <View style={styles.content(theme)}>
           <View style={styles.dragbar}></View>
           <View style={styles.textInputWrapper}>
             <TextInput
               value={inputText}
-              style={styles.input}
+              placeholderTextColor={theme === "dark" ? "darkgray" : "lightgray"}
+              style={styles.input(theme)}
               onChangeText={(text) => {
-                LayoutAnimation.configureNext(
-                  LayoutAnimation.Presets.easeInEaseOut
-                );
+                LayoutAnimation.configureNext({
+                  duration: 600,
+                  update: { type: "spring", springDamping: 0.6 },
+                });
                 setInputText(text);
               }}
               placeholder="someday I will..."
@@ -114,14 +124,14 @@ export default function NewTodo({ item, open, close, prefixedList }) {
                   <Animated.View
                     style={[
                       styles.generalButton,
-                      styles.createButton,
+                      styles.createButton(theme),
                       { transform: [{ scale: submitScaleAnim }] },
                     ]}
                   >
                     <Text
                       style={[
-                        styles.generalButtonText,
-                        styles.createButtonText,
+                        styles.generalButtonText(theme),
+                        styles.createButtonText(theme),
                       ]}
                     >
                       add
@@ -147,11 +157,14 @@ export default function NewTodo({ item, open, close, prefixedList }) {
                       ]}
                     >
                       <Text
-                        style={[styles.generalButtonText, styles.emojiText]}
+                        style={[
+                          styles.generalButtonText(theme),
+                          styles.emojiText,
+                        ]}
                       >
                         {timeframeOptions[timeframeSelected].emoji}{" "}
                       </Text>
-                      <Text style={[styles.generalButtonText]}>
+                      <Text style={[styles.generalButtonText(theme)]}>
                         {timeframeOptions[timeframeSelected].id}
                       </Text>
                     </Animated.View>
@@ -171,16 +184,15 @@ const styles = StyleSheet.create({
     margin: 0,
     justifyContent: "flex-end",
   },
-  content: {
-    backgroundColor: "white",
+  content: (theme) => ({
+    backgroundColor: theme === "dark" ? "black" : "white",
     padding: 25,
     paddingTop: 15,
     justifyContent: "center",
     alignItems: "center",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    borderColor: "rgba(0, 0, 0, 0.1)",
-  },
+  }),
   dragbar: {
     width: 50,
     height: 4,
@@ -189,14 +201,16 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   textInputWrapper: { width: "100%" },
-  input: {
-    backgroundColor: "rgba(0,0,0,0.05)",
+  input: (theme) => ({
+    color: theme === "dark" ? "#fff" : "#333",
+    backgroundColor:
+      theme === "dark" ? "rgba(120,190,255,0.15)" : "rgba(0,0,0,0.05)",
     padding: 20,
     paddingVertical: 30,
     fontSize: 20,
     borderRadius: 28,
     fontFamily: "DMSans_400Regular",
-  },
+  }),
   buttonsWrapper: {
     display: "flex",
     flexDirection: "row-reverse",
@@ -215,11 +229,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  generalButtonText: {
+  generalButtonText: (theme) => ({
     fontSize: 22,
     fontFamily: "DMSans_700Bold",
-    color: "#333",
-  },
+    color: theme === "dark" ? "#fff" : "#333",
+  }),
   emojiText: {
     fontSize: 35,
   },
@@ -229,10 +243,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderColor: "lightgray",
   },
-  createButton: {
-    backgroundColor: "#333",
-  },
-  createButtonText: {
-    color: "white",
-  },
+  createButton: (theme) => ({
+    backgroundColor: theme === "dark" ? "white" : "#333",
+    borderColor: theme === "dark" ? "white" : "#333",
+  }),
+  createButtonText: (theme) => ({
+    color: theme === "dark" ? "#333" : "white",
+  }),
 });

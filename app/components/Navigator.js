@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { View } from "react-native";
 import TodosScreen from "../screens/TodosScreen";
 import ListsScreen from "../screens/ListsScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useMgmt } from "../hooks/useMgmt";
-
+import ToggleThemeButton from "./ToggleThemeButton";
+import { StatusBar } from "expo-status-bar";
 const Stack = createStackNavigator();
 
 export default function Navigator() {
-  const [{ current, lists }] = useMgmt();
+  const [{ current, lists, theme }] = useMgmt();
   return (
     <NavigationContainer>
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <Stack.Navigator
         screenOptions={{
           backgroundColor: "transparent",
@@ -25,17 +28,18 @@ export default function Navigator() {
           component={ListsScreen}
           options={{
             headerTitle: "",
-            headerTintColor: "black",
+            headerTintColor: theme === "dark" ? "white" : "black",
+            headerRight: () => <ToggleThemeButton />,
           }}
         />
         <Stack.Screen
           name="List"
           component={TodosScreen}
           options={{
-            headerBackTitle: "Back",
-            // headerTitle: lists[current] && lists[current].title,
+            headerBackTitle: "back",
+            headerBackTitleStyle: { fontSize: 20 },
             headerTitle: "",
-            headerTintColor: "black",
+            headerTintColor: theme === "dark" ? "white" : "black",
           }}
         />
       </Stack.Navigator>

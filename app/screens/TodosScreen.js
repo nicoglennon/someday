@@ -6,7 +6,7 @@ import { useHeaderHeight } from "@react-navigation/stack";
 import AddItemBtn from "../components/AddItemBtn";
 
 export default function TodosScreen() {
-  const [{ lists, current }, setState] = useMgmt();
+  const [{ lists, current, theme }, setState] = useMgmt();
   const headerHeight = useHeaderHeight();
 
   const handleNavigate = (listId) => {
@@ -20,18 +20,19 @@ export default function TodosScreen() {
       return todo.id === todoId ? { ...todo, done: !todo.done } : todo;
     });
     setState({
+      theme,
       current,
       lists: { ...lists, [current]: { ...lists[current], items: newTodos } },
     });
   };
 
   return (
-    <View style={[styles.safeArea]}>
+    <View style={[styles.safeArea(theme)]}>
       <ScrollView style={{ paddingTop: headerHeight }}>
         <View style={styles.todosScreen}>
           <View>
             <Text style={styles.listEmoji}>{lists[current].emoji}</Text>
-            <Text style={styles.listTitle}>{lists[current].title}</Text>
+            <Text style={styles.listTitle(theme)}>{lists[current].title}</Text>
           </View>
           <TodoList
             todos={lists[current] ? lists[current].items : []}
@@ -45,11 +46,12 @@ export default function TodosScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  safeArea: (theme) => ({
     flex: 1,
     justifyContent: "flex-start",
     width: "100%",
-  },
+    backgroundColor: theme === "dark" ? "black" : null,
+  }),
   todosScreen: {
     paddingLeft: 15,
     paddingRight: 15,
@@ -62,10 +64,10 @@ const styles = StyleSheet.create({
   listEmoji: {
     fontSize: 50,
   },
-  listTitle: {
+  listTitle: (theme) => ({
     marginTop: 0,
     fontSize: 36,
     fontFamily: "DMSans_700Bold",
-    color: "#333333",
-  },
+    color: theme === "dark" ? "#fff" : "#333",
+  }),
 });

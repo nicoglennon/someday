@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import {
   View,
   Text,
@@ -6,18 +6,23 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
+import { useMgmt } from "../hooks/useMgmt";
 
 export default function List({ list, handleNavigate }) {
+  const [{ theme }] = useMgmt();
+
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const animateOnPressInList = () => {
     Animated.spring(fadeAnim, {
-      toValue: 0.95,
+      toValue: 0.97,
       useNativeDriver: true,
+      speed: 20,
     }).start();
   };
   const animateOnPressOutList = () => {
     Animated.spring(fadeAnim, {
       toValue: 1,
+      speed: 20,
       useNativeDriver: true,
     }).start();
   };
@@ -31,16 +36,16 @@ export default function List({ list, handleNavigate }) {
       onPressOut={animateOnPressOutList}
     >
       <Animated.View
-        style={[styles.list, { transform: [{ scale: fadeAnim }] }]}
+        style={[styles.list(theme), { transform: [{ scale: fadeAnim }] }]}
       >
         <View style={styles.listChild}>
           <Text style={styles.listEmoji}>{list.emoji}</Text>
-          <Text style={styles.listText}>{list.title}</Text>
+          <Text style={styles.listText(theme)}>{list.title}</Text>
         </View>
         {list.id !== "someday" && (
           <View style={styles.listChild}>
             <View style={styles.listBadge}>
-              <Text style={[styles.listText, styles.badgeText]}>
+              <Text style={[styles.listText(theme), styles.badgeText]}>
                 {list.items.filter((item) => !item.done).length}
               </Text>
             </View>
@@ -52,24 +57,25 @@ export default function List({ list, handleNavigate }) {
 }
 
 const styles = StyleSheet.create({
-  list: {
+  list: (theme) => ({
     flex: 1,
     padding: 24,
     paddingTop: "10%",
     marginBottom: 12,
     textAlign: "left",
-    backgroundColor: "rgba(0,0,0,0.05)",
+    backgroundColor:
+      theme === "dark" ? "rgba(120,190,255,0.15)" : "rgba(0,0,0,0.05)",
     borderRadius: 25,
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "space-between",
-  },
-  listText: {
+  }),
+  listText: (theme) => ({
     fontSize: 26,
     fontWeight: "bold",
     fontFamily: "DMSans_700Bold",
-    color: "#333333",
-  },
+    color: theme === "dark" ? "#fff" : "#333",
+  }),
   listChild: {},
   listEmoji: {
     fontSize: 50,
