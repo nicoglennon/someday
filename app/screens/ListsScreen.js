@@ -16,7 +16,7 @@ export default function ListsScreen({ navigation }) {
   const headerHeight = useHeaderHeight();
 
   return (
-    <View style={styles.safeArea}>
+    <View style={[styles.safeArea(state.theme)]}>
       <ScrollView style={{ paddingTop: headerHeight }}>
         <View style={styles.listsScreen}>
           <Text style={styles.versionText}>1.0</Text>
@@ -33,12 +33,12 @@ export default function ListsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  safeArea: (theme) => ({
     flex: 1,
     // justifyContent: "flex-start",
     width: "100%",
-    // backgroundColor: "black",
-  },
+    backgroundColor: theme === "dark" ? "black" : null,
+  }),
   listsScreen: {
     paddingLeft: 15,
     paddingRight: 15,

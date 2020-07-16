@@ -3,21 +3,25 @@ import { Text, View, StyleSheet, Animated, Keyboard } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import NewTodo from "./NewTodo";
 import * as Haptics from "expo-haptics";
+import { useMgmt } from "../hooks/useMgmt";
 
 export default function AddItemBtn({ handleNavigate, prefixedList }) {
+  const [{ theme }] = useMgmt();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [newTodoOpen, setNewTodoOpen] = useState(false);
 
   const animateOnPressInList = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.95,
+      toValue: 0.9,
       useNativeDriver: true,
+      speed: 20,
     }).start();
   };
   const animateOnPressOutList = () => {
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
+      speed: 20,
     }).start();
   };
   const handleCloseNewTodo = () => {
@@ -36,9 +40,9 @@ export default function AddItemBtn({ handleNavigate, prefixedList }) {
         activeOpacity={0.75}
       >
         <Animated.View
-          style={[styles.addItem, { transform: [{ scale: scaleAnim }] }]}
+          style={[styles.addItem(theme), { transform: [{ scale: scaleAnim }] }]}
         >
-          <Text style={styles.addItemText}>✏️</Text>
+          <Text style={styles.addItemText}>✍️</Text>
         </Animated.View>
         <NewTodo
           open={newTodoOpen}
@@ -58,20 +62,20 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     position: "absolute",
     alignSelf: "center",
-    bottom: 40,
+    bottom: 30,
+    right: 30,
   },
-  addItem: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    height: 70,
-    width: 70,
-    backgroundColor: "lightgrey",
-    borderRadius: 40,
+  addItem: (theme) => ({
+    height: 60,
+    width: 60,
+    backgroundColor: theme === "dark" ? "slategray" : "lightgrey",
+    borderRadius: 30,
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-  },
+  }),
   addItemText: {
-    fontSize: 30,
+    fontSize: 38,
     fontFamily: "DMSans_700Bold",
   },
 });

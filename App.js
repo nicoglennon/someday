@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { MgmtProvider } from "./app/hooks/useMgmt";
 import Navigator from "./app/components/Navigator";
@@ -12,6 +11,7 @@ import {
 
 export default function App() {
   const initialState = {
+    theme: "light",
     current: null,
     lists: {
       today: {
@@ -60,7 +60,6 @@ export default function App() {
 
   return (
     <MgmtProvider initialState={initialState}>
-      <StatusBar backgroundColor="#fff" />
       <Navigator />
     </MgmtProvider>
   );
