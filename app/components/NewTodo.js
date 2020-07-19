@@ -60,7 +60,11 @@ export default function NewTodo({ item, open, close, prefixedList }) {
       prefixedList || timeframeOptions[timeframeSelected].id;
     const oldListItems = lists[listToUpdateId].items;
     const newListItems = [...oldListItems, newItem];
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    LayoutAnimation.configureNext({
+      duration: 500,
+      create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
+    });
     setState({
       theme,
       current: listToUpdateId,

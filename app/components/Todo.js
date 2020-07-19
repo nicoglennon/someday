@@ -41,7 +41,7 @@ export default function Todo({ todo, toggleDone }) {
       LayoutAnimation.configureNext({
         duration: 500,
         create: { type: "linear", property: "opacity" },
-        update: { type: "spring", springDamping: 0.75 },
+        update: { type: "spring", springDamping: 0.7 },
         delete: { type: "linear", property: "opacity" },
       });
       toggleDone({ todoId: todo.id });
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     textAlign: "left",
     backgroundColor:
       theme === "dark" ? "rgba(120,190,255,0.15)" : "rgba(0,0,0,0.05)",
-    borderRadius: 30,
+    borderRadius: 24,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
