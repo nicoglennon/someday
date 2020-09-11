@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
-import { View } from "react-native";
+import React from "react";
 import TodosScreen from "../screens/TodosScreen";
 import ListsScreen from "../screens/ListsScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useMgmt } from "../hooks/useMgmt";
 import ToggleThemeButton from "./ToggleThemeButton";
+import ClearDataButton from "./ClearDataButton";
 import { StatusBar } from "expo-status-bar";
 const Stack = createStackNavigator();
 
@@ -30,6 +30,7 @@ export default function Navigator() {
             headerTitle: "",
             headerTintColor: theme === "dark" ? "white" : "black",
             headerRight: () => <ToggleThemeButton />,
+            headerLeft: () => <ClearDataButton />,
           }}
         />
         <Stack.Screen

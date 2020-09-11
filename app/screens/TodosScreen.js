@@ -1,25 +1,32 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  LayoutAnimation,
+} from "react-native";
 import TodoList from "../components/TodoList";
 import { useMgmt } from "../hooks/useMgmt";
 import { useHeaderHeight } from "@react-navigation/stack";
 import AddItemBtn from "../components/AddItemBtn";
 
 export default function TodosScreen() {
-  const [{ lists, current, theme }, setState] = useMgmt();
+  const [{ lists, current, theme }, setStorage] = useMgmt();
+  // const [selectedTodo, setSelectedTodo] = useState();
   const headerHeight = useHeaderHeight();
 
-  const handleNavigate = (listId) => {
-    setState({ ...state, current: listId });
+  const handleNavigate = async (listId) => {
+    await setStorage({ ...state, current: listId });
     navigation.navigate("List");
   };
 
-  const toggleDone = ({ todoId }) => {
+  const toggleDone = async ({ todoId }) => {
     const oldTodos = lists[current].items;
-    const newTodos = oldTodos.map((todo) => {
-      return todo.id === todoId ? { ...todo, done: !todo.done } : todo;
+    const newTodos = oldTodos.filter((todo) => {
+      return todo.id !== todoId;
     });
-    setState({
+    await setStorage({
       theme,
       current,
       lists: { ...lists, [current]: { ...lists[current], items: newTodos } },

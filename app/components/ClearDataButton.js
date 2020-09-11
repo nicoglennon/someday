@@ -2,20 +2,19 @@ import React from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { useMgmt } from "../hooks/useMgmt";
 import * as Haptics from "expo-haptics";
+import { initialState } from "../../App";
 
 export default function ToggleThemeButton() {
   const [state, setStorage] = useMgmt();
-  const handleToggleTheme = async () => {
+
+  const handleClearData = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    await setStorage({
-      ...state,
-      theme: state.theme === "light" ? "dark" : "light",
-    });
+    await setStorage(initialState);
   };
   return (
-    <TouchableOpacity onPress={handleToggleTheme}>
+    <TouchableOpacity onPress={handleClearData}>
       <View style={styles.iconWrapper}>
-        <Text style={styles.iconText(state.theme)}>{state.theme}</Text>
+        <Text style={styles.iconText(state.theme)}>clear</Text>
       </View>
     </TouchableOpacity>
   );

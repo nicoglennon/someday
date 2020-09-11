@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { AsyncStorage } from "react-native";
 import { MgmtProvider } from "./app/hooks/useMgmt";
 import Navigator from "./app/components/Navigator";
 
@@ -9,45 +10,60 @@ import {
   DMSans_700Bold,
 } from "@expo-google-fonts/dm-sans";
 
-export default function App() {
-  const initialState = {
-    theme: "light",
-    current: null,
-    lists: {
-      today: {
-        id: "today",
-        title: "today",
-        emoji: "💅",
-        order: 0,
-        items: [
-          { id: 1, text: "Make commit", done: true },
-          { id: 2, text: "Pull request", done: false },
-        ],
-      },
-      tomorrow: {
-        id: "tomorrow",
-        title: "tomorrow",
-        emoji: "☂️",
-        order: 1,
-        items: [
-          { id: 1, text: "Walk dog", done: false },
-          { id: 2, text: "Do laundry", done: true },
-          { id: 3, text: "Work out", done: true },
-        ],
-      },
-      someday: {
-        id: "someday",
-        title: "someday",
-        emoji: "🔮",
-        order: 2,
-        items: [
-          { id: 1, text: "Other stuff", done: false },
-          { id: 2, text: "Other thangs", done: false },
-          { id: 3, text: "Whoooo", done: true },
-        ],
-      },
+const getDataASync = async () => {
+  console.log("Getting data async:");
+  try {
+    const jsonValue = await AsyncStorage.getItem("@storage");
+    console.log("stored data:", jsonValue);
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (e) {
+    // error reading value
+    alert("Error reading state!");
+  }
+};
+
+export const initialState = {
+  theme: "light",
+  current: null,
+  lists: {
+    today: {
+      id: "today",
+      title: "today",
+      emoji: "💅",
+      order: 0,
+      items: [{ id: 2, text: "Pull request", done: false }],
     },
-  };
+    tomorrow: {
+      id: "tomorrow",
+      title: "tomorrow",
+      emoji: "☂️",
+      order: 1,
+      items: [{ id: 1, text: "Walk dog", done: false }],
+    },
+    someday: {
+      id: "someday",
+      title: "someday",
+      emoji: "🔮",
+      order: 2,
+      items: [
+        { id: 1, text: "Other stuff", done: false },
+        { id: 2, text: "Other thangs", done: false },
+      ],
+    },
+  },
+};
+
+export default function App() {
+  const [dataLoaded, setDataLoaded] = useState(null);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const loadedData = await getDataASync();
+      setDataLoaded(loadedData);
+    };
+
+    loadData();
+  }, []);
 
   let [fontsLoaded] = useFonts({
     DMSans_400Regular,
@@ -59,7 +75,7 @@ export default function App() {
   }
 
   return (
-    <MgmtProvider initialState={initialState}>
+    <MgmtProvider initialState={dataLoaded ? dataLoaded : initialState}>
       <Navigator />
     </MgmtProvider>
   );

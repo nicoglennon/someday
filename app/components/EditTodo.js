@@ -13,7 +13,7 @@ import * as Haptics from "expo-haptics";
 import { useMgmt } from "../hooks/useMgmt";
 import shortid from "shortid";
 
-export default function NewTodo({ item, open, close, prefixedList }) {
+export default function EditTodo({ item, open, close, prefixedList }) {
   const [{ lists, current, theme }, setStorage] = useMgmt();
 
   const timeframeOptions = [
@@ -22,11 +22,9 @@ export default function NewTodo({ item, open, close, prefixedList }) {
     { emoji: "🔮", id: "someday" },
   ];
   const [timeframeSelected, setTimeframeSelected] = useState(0);
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState(item.text);
   const handleClose = () => {
     close();
-    setInputText("");
-    setTimeframeSelected(0);
   };
   const toggleTimeframeSelected = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

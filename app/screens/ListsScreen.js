@@ -6,10 +6,10 @@ import { useMgmt } from "../hooks/useMgmt";
 import { useHeaderHeight } from "@react-navigation/stack";
 
 export default function ListsScreen({ navigation }) {
-  const [state, setState] = useMgmt();
+  const [state, setStorage] = useMgmt();
 
-  const handleNavigate = (listId) => {
-    setState({ ...state, current: listId });
+  const handleNavigate = async (listId) => {
+    await setStorage({ ...state, current: listId });
     navigation.navigate("List");
   };
 

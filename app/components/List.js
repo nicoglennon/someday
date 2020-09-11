@@ -7,6 +7,7 @@ import {
   Animated,
 } from "react-native";
 import { useMgmt } from "../hooks/useMgmt";
+import * as Haptics from "expo-haptics";
 
 export default function List({ list, handleNavigate }) {
   const [{ theme }] = useMgmt();
@@ -30,6 +31,7 @@ export default function List({ list, handleNavigate }) {
     <TouchableOpacity
       activeOpacity={0.75}
       onPress={() => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         handleNavigate(list.id);
       }}
       onPressIn={animateOnPressInList}
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "#333333",
+    backgroundColor: "#333",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
