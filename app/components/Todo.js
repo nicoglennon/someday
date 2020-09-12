@@ -17,7 +17,6 @@ const timeframeOptions = [
   { emoji: "☂️", id: "tomorrow" },
   { emoji: "🔮", id: "someday" },
 ];
-
 export default function Todo({ todo, toggleDone }) {
   const [checked, setChecked] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -201,9 +200,6 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     width: "100%",
   },
-  inspectSpacing: {
-    width: 10,
-  },
   inspectWrapper: {
     marginTop: 6,
     // backgroundColor: "red",
@@ -228,7 +224,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor:
       theme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.5)",
-    borderWidth: 2,
     borderColor: theme === "dark" ? "lightgray" : "darkgray",
   }),
   doneButtonEmojiText: {

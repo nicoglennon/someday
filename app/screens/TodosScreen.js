@@ -1,24 +1,21 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  LayoutAnimation,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Keyboard } from "react-native";
 import TodoList from "../components/TodoList";
 import { useMgmt } from "../hooks/useMgmt";
 import { useHeaderHeight } from "@react-navigation/stack";
 import AddItemBtn from "../components/AddItemBtn";
+import TodoModal from "../components/TodoModal";
 
 export default function TodosScreen() {
   const [{ lists, current, theme }, setStorage] = useMgmt();
-  // const [selectedTodo, setSelectedTodo] = useState();
+  // const [inspectedTodo, setInspectedTodo] = useState();
   const headerHeight = useHeaderHeight();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleNavigate = async (listId) => {
-    await setStorage({ ...state, current: listId });
-    navigation.navigate("List");
+    // await setStorage({ lists, theme, current: listId });
+    // navigation.navigate("List");
+    console.log(listId);
   };
 
   const toggleDone = async ({ todoId }) => {
@@ -31,6 +28,11 @@ export default function TodosScreen() {
       current,
       lists: { ...lists, [current]: { ...lists[current], items: newTodos } },
     });
+  };
+
+  const handleCloseNewTodo = () => {
+    Keyboard.dismiss();
+    setModalIsOpen(false);
   };
 
   return (
@@ -47,7 +49,13 @@ export default function TodosScreen() {
           />
         </View>
       </ScrollView>
-      <AddItemBtn handleNavigate={handleNavigate} prefixedList={current} />
+      <AddItemBtn setModalIsOpen={setModalIsOpen} />
+      <TodoModal
+        open={modalIsOpen}
+        close={handleCloseNewTodo}
+        handleNavigate={handleNavigate}
+        prefixedList={current}
+      />
     </View>
   );
 }
@@ -63,10 +71,6 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     paddingBottom: 220,
-  },
-  titleArea: {
-    alignItems: "center",
-    marginBottom: 5,
   },
   listEmoji: {
     fontSize: 50,

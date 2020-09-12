@@ -1,14 +1,12 @@
-import React, { useRef, useState } from "react";
-import { Text, View, StyleSheet, Animated, Keyboard } from "react-native";
+import React, { useRef } from "react";
+import { Text, View, StyleSheet, Animated } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import NewTodo from "./NewTodo";
 import * as Haptics from "expo-haptics";
 import { useMgmt } from "../hooks/useMgmt";
 
-export default function AddItemBtn({ handleNavigate, prefixedList }) {
+export default function AddItemBtn({ setModalIsOpen }) {
   const [{ theme }] = useMgmt();
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const [newTodoOpen, setNewTodoOpen] = useState(false);
 
   const animateOnPressInList = () => {
     Animated.spring(scaleAnim, {
@@ -24,10 +22,6 @@ export default function AddItemBtn({ handleNavigate, prefixedList }) {
       speed: 20,
     }).start();
   };
-  const handleCloseNewTodo = () => {
-    Keyboard.dismiss();
-    setNewTodoOpen(false);
-  };
   return (
     <View style={styles.buttonWrapper}>
       <TouchableOpacity
@@ -35,7 +29,7 @@ export default function AddItemBtn({ handleNavigate, prefixedList }) {
         onPressOut={animateOnPressOutList}
         onPress={() => {
           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          setNewTodoOpen(true);
+          setModalIsOpen(true);
         }}
         activeOpacity={0.75}
       >
@@ -44,12 +38,6 @@ export default function AddItemBtn({ handleNavigate, prefixedList }) {
         >
           <Text style={styles.addItemText}>✍️</Text>
         </Animated.View>
-        <NewTodo
-          open={newTodoOpen}
-          close={handleCloseNewTodo}
-          handleNavigate={handleNavigate}
-          prefixedList={prefixedList}
-        />
       </TouchableOpacity>
     </View>
   );

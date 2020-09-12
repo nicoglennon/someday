@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
+import { StyleSheet, View, Text, ScrollView, Keyboard } from "react-native";
 import ListsList from "../components/ListsList";
 import AddItemBtn from "../components/AddItemBtn";
 import { useMgmt } from "../hooks/useMgmt";
 import { useHeaderHeight } from "@react-navigation/stack";
+import TodoModal from "../components/TodoModal";
 
 export default function ListsScreen({ navigation }) {
   const [state, setStorage] = useMgmt();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleNavigate = async (listId) => {
     await setStorage({ ...state, current: listId });
@@ -14,20 +16,25 @@ export default function ListsScreen({ navigation }) {
   };
 
   const headerHeight = useHeaderHeight();
+  const handleCloseNewTodo = () => {
+    Keyboard.dismiss();
+    setModalIsOpen(false);
+  };
 
   return (
     <View style={[styles.safeArea(state.theme)]}>
       <ScrollView style={{ paddingTop: headerHeight }}>
         <View style={styles.listsScreen}>
           <Text style={styles.versionText}>1.0</Text>
-          <ListsList
-            current={state.current}
-            lists={state.lists}
-            handleNavigate={handleNavigate}
-          />
+          <ListsList lists={state.lists} handleNavigate={handleNavigate} />
         </View>
       </ScrollView>
-      <AddItemBtn handleNavigate={handleNavigate} />
+      <AddItemBtn setModalIsOpen={setModalIsOpen} />
+      <TodoModal
+        open={modalIsOpen}
+        close={handleCloseNewTodo}
+        handleNavigate={handleNavigate}
+      />
     </View>
   );
 }

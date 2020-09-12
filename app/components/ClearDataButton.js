@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { useMgmt } from "../hooks/useMgmt";
 import * as Haptics from "expo-haptics";
-import { initialState } from "../../App";
+import { initialState } from "../constants/constants";
 
 export default function ToggleThemeButton() {
   const [state, setStorage] = useMgmt();

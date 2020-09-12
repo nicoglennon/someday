@@ -13,9 +13,9 @@ import * as Haptics from "expo-haptics";
 import { useMgmt } from "../hooks/useMgmt";
 import shortid from "shortid";
 
-export default function NewTodo({ item, open, close, prefixedList }) {
-  const [{ lists, current, theme }, setStorage] = useMgmt();
-
+export default function TodoModal({ todo, open, close, prefixedList }) {
+  const [{ lists, theme }, setStorage] = useMgmt();
+  console.log(todo);
   const timeframeOptions = [
     { emoji: "💅", id: "today" },
     { emoji: "☂️", id: "tomorrow" },
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
       theme === "dark" ? "rgba(120,190,255,0.15)" : "rgba(0,0,0,0.05)",
     padding: 20,
     paddingVertical: 30,
-    fontSize: 20,
+    fontSize: 22,
     borderRadius: 28,
     fontFamily: "DMSans_400Regular",
   }),
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   generalButtonText: (theme) => ({
-    fontSize: 22,
+    fontSize: 24,
     fontFamily: "DMSans_700Bold",
     color: theme === "dark" ? "#fff" : "#333",
   }),

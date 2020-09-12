@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import List from "./List";
 
-export default function ListsList({ lists, current, handleNavigate }) {
+export default function ListsList({ lists, handleNavigate }) {
   return (
     <View style={styles.listsList}>
       {["today", "tomorrow", "someday"].map((listKey) => (

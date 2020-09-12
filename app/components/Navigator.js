@@ -10,7 +10,7 @@ import { StatusBar } from "expo-status-bar";
 const Stack = createStackNavigator();
 
 export default function Navigator() {
-  const [{ current, lists, theme }] = useMgmt();
+  const [{ theme }] = useMgmt();
   return (
     <NavigationContainer>
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
