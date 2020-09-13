@@ -29,7 +29,9 @@ export default function Navigator() {
           options={{
             headerTitle: "",
             headerTintColor: theme === "dark" ? "white" : "black",
+            // eslint-disable-next-line react/display-name
             headerRight: () => <ToggleThemeButton />,
+            // eslint-disable-next-line react/display-name
             headerLeft: () => <ClearDataButton />,
           }}
         />

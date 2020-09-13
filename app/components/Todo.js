@@ -11,6 +11,7 @@ import { Octicons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { Easing } from "react-native-reanimated";
 import { useMgmt } from "../hooks/useMgmt";
+import PropTypes from "prop-types";
 
 const timeframeOptions = [
   { emoji: "💅", id: "today" },
@@ -51,7 +52,7 @@ export default function Todo({ todo, toggleDone }) {
       ],
       {
         easing: Easing.ease,
-      }
+      },
     ).start(() => {
       LayoutAnimation.configureNext({
         duration: 500,
@@ -107,7 +108,7 @@ export default function Todo({ todo, toggleDone }) {
             onPressOut={animateOnPressOutList}
           >
             <View style={styles.todoCheckbox(theme, checked)}>
-              <Text style={styles.checkboxText(theme)}>
+              <Text style={styles.checkboxText}>
                 {checked && <Octicons name="check" size={24} color="white" />}
               </Text>
             </View>
@@ -129,13 +130,6 @@ export default function Todo({ todo, toggleDone }) {
                     </Text>
                   </View>
                 ))}
-              {/* <View style={[styles.inspectButton(theme)]}>
-              <Text style={styles.doneButtonText(theme)}>done</Text>
-            </View>
-            <View style={styles.inspectSpacing} />
-            <View style={[styles.inspectButton(theme)]}>
-              <Text style={styles.doneButtonText(theme)}>move</Text>
-            </View> */}
             </View>
           </View>
         )}
@@ -143,6 +137,11 @@ export default function Todo({ todo, toggleDone }) {
     </TouchableOpacity>
   );
 }
+
+Todo.propTypes = {
+  todo: PropTypes.object.isRequired,
+  toggleDone: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   todo: (theme) => ({
@@ -188,12 +187,12 @@ const styles = StyleSheet.create({
       ? "lightgray"
       : "darkgray",
   }),
-  checkboxText: (theme) => ({
+  checkboxText: {
     fontSize: 22,
     textAlign: "center",
     fontFamily: "DMSans_400Regular",
     color: "white",
-  }),
+  },
   inspectContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",

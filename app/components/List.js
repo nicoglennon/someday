@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useMgmt } from "../hooks/useMgmt";
 import * as Haptics from "expo-haptics";
+import PropTypes from "prop-types";
 
 export default function List({ list, handleNavigate }) {
   const [{ theme }] = useMgmt();
@@ -57,6 +58,11 @@ export default function List({ list, handleNavigate }) {
     </TouchableOpacity>
   );
 }
+
+List.propTypes = {
+  list: PropTypes.object,
+  handleNavigate: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   list: (theme) => ({

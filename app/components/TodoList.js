@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Todo from "./Todo";
 import { useMgmt } from "../hooks/useMgmt";
+import PropTypes from "prop-types";
 
 export default function TodoList({ todos, toggleDone }) {
   const [{ theme }] = useMgmt();
@@ -10,7 +11,7 @@ export default function TodoList({ todos, toggleDone }) {
       <View style={styles.emptyTodolist}>
         <View style={styles.emptyTodolistTextWrapper(theme)}>
           <Text style={styles.emptyTodolistText(theme)}>
-            hooray, you're done!
+            hooray, you&apos;re done!
           </Text>
           <Text style={styles.emptyTodolistEmoji}>🕺</Text>
         </View>
@@ -30,6 +31,11 @@ export default function TodoList({ todos, toggleDone }) {
     </View>
   );
 }
+
+TodoList.propTypes = {
+  todos: PropTypes.array,
+  toggleDone: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   todoList: {

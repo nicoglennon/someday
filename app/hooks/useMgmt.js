@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AsyncStorage } from "react-native";
 const MgmtContext = React.createContext();
+import PropTypes from "prop-types";
 
 export const MgmtProvider = ({ initialState, children }) => {
   const [state, setState] = useState(initialState);
@@ -23,4 +24,10 @@ export const MgmtProvider = ({ initialState, children }) => {
     </MgmtContext.Provider>
   );
 };
+
+MgmtProvider.propTypes = {
+  initialState: PropTypes.object.isRequired,
+  children: PropTypes.any.isRequired,
+};
+
 export const useMgmt = () => useContext(MgmtContext);

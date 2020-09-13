@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Animated } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
 import { useMgmt } from "../hooks/useMgmt";
+import PropTypes from "prop-types";
 
 export default function AddItemBtn({ setModalIsOpen }) {
   const [{ theme }] = useMgmt();
@@ -42,6 +43,10 @@ export default function AddItemBtn({ setModalIsOpen }) {
     </View>
   );
 }
+
+AddItemBtn.propTypes = {
+  setModalIsOpen: PropTypes.func.isRequired,
+};
 
 const styles = StyleSheet.create({
   buttonWrapper: {

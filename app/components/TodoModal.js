@@ -12,10 +12,11 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
 import { useMgmt } from "../hooks/useMgmt";
 import shortid from "shortid";
+import PropTypes from "prop-types";
 
 export default function TodoModal({ todo, open, close, prefixedList }) {
-  const [{ lists, theme }, setStorage] = useMgmt();
   console.log(todo);
+  const [{ lists, theme }, setStorage] = useMgmt();
   const timeframeOptions = [
     { emoji: "💅", id: "today" },
     { emoji: "☂️", id: "tomorrow" },
@@ -182,6 +183,13 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
     </View>
   );
 }
+
+TodoModal.propTypes = {
+  todo: PropTypes.object,
+  open: PropTypes.bool.isRequired,
+  close: PropTypes.func.isRequired,
+  prefixedList: PropTypes.string,
+};
 
 const styles = StyleSheet.create({
   modal: {

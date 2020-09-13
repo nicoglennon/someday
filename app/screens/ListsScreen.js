@@ -5,6 +5,7 @@ import AddItemBtn from "../components/AddItemBtn";
 import { useMgmt } from "../hooks/useMgmt";
 import { useHeaderHeight } from "@react-navigation/stack";
 import TodoModal from "../components/TodoModal";
+import PropTypes from "prop-types";
 
 export default function ListsScreen({ navigation }) {
   const [state, setStorage] = useMgmt();
@@ -38,6 +39,10 @@ export default function ListsScreen({ navigation }) {
     </View>
   );
 }
+
+ListsScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
 
 const styles = StyleSheet.create({
   safeArea: (theme) => ({

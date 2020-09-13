@@ -13,8 +13,6 @@ export default function TodosScreen() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleNavigate = async (listId) => {
-    // await setStorage({ lists, theme, current: listId });
-    // navigation.navigate("List");
     console.log(listId);
   };
 
