@@ -13,27 +13,16 @@ import { Easing } from "react-native-reanimated";
 import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
 
-const timeframeOptions = [
-  { emoji: "💅", id: "today" },
-  { emoji: "☂️", id: "tomorrow" },
-  { emoji: "🔮", id: "someday" },
-];
-export default function Todo({ todo, toggleDone }) {
+export default function Todo({ todo, toggleDone, setTodo }) {
   const [checked, setChecked] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [{ theme, current }] = useMgmt();
+  const [{ theme }] = useMgmt();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const deleteScaleAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const handleInspectItem = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    LayoutAnimation.configureNext({
-      duration: 500,
-      // create: { type: "spring", springDamping: 0.7, property: "scaleY" },
-      update: { type: "spring", springDamping: 0.7 },
-    });
-    setIsOpen(!isOpen);
+    setTodo(todo);
   };
 
   const handleDeleteItem = () => {
@@ -83,8 +72,8 @@ export default function Todo({ todo, toggleDone }) {
     <TouchableOpacity
       activeOpacity={0.75}
       onPress={handleInspectItem}
-      // onPressIn={animateOnPressInList}
-      // onPressOut={animateOnPressOutList}
+      onPressIn={animateOnPressInList}
+      onPressOut={animateOnPressOutList}
     >
       <Animated.View
         style={[
@@ -102,7 +91,7 @@ export default function Todo({ todo, toggleDone }) {
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               setChecked(true);
-              setTimeout(handleDeleteItem, 600);
+              setTimeout(handleDeleteItem, 400);
             }}
             onPressIn={animateOnPressInList}
             onPressOut={animateOnPressOutList}
@@ -114,25 +103,6 @@ export default function Todo({ todo, toggleDone }) {
             </View>
           </TouchableOpacity>
         </View>
-        {isOpen && (
-          <View style={styles.inspectWrapper}>
-            <Text style={styles.inspectLabel}>MOVE TO:</Text>
-            <View style={styles.inspectContainer}>
-              {timeframeOptions
-                .filter((option) => option.id !== current)
-                .map((option) => (
-                  <View style={[styles.inspectButton(theme)]} key={option.id}>
-                    <Text style={styles.doneButtonEmojiText}>
-                      {option.emoji}
-                    </Text>
-                    <Text style={styles.doneButtonText(theme)}>
-                      {option.id}
-                    </Text>
-                  </View>
-                ))}
-            </View>
-          </View>
-        )}
       </Animated.View>
     </TouchableOpacity>
   );
@@ -141,6 +111,7 @@ export default function Todo({ todo, toggleDone }) {
 Todo.propTypes = {
   todo: PropTypes.object.isRequired,
   toggleDone: PropTypes.func.isRequired,
+  setTodo: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({

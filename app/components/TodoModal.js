@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,29 +14,45 @@ import { useMgmt } from "../hooks/useMgmt";
 import shortid from "shortid";
 import PropTypes from "prop-types";
 
+const timeframeOptions = [
+  { emoji: "💅", id: "today" },
+  { emoji: "☂️", id: "tomorrow" },
+  { emoji: "🔮", id: "someday" },
+];
+
+const listToTimeframe = {
+  today: 0,
+  tomorrow: 1,
+  someday: 2,
+};
 export default function TodoModal({ todo, open, close, prefixedList }) {
-  console.log(todo);
-  const [{ lists, theme }, setStorage] = useMgmt();
-  const timeframeOptions = [
-    { emoji: "💅", id: "today" },
-    { emoji: "☂️", id: "tomorrow" },
-    { emoji: "🔮", id: "someday" },
-  ];
-  const [timeframeSelected, setTimeframeSelected] = useState(0);
+  console.log({ todo, prefixedList });
   const [inputText, setInputText] = useState("");
+  const [{ lists, theme }, setStorage] = useMgmt();
+  const [timeframeSelected, setTimeframeSelected] = useState(
+    prefixedList ? listToTimeframe[prefixedList] : 0,
+  );
+  console.log("timeframeSelected: ", timeframeSelected);
   const handleClose = () => {
     close();
     setInputText("");
-    setTimeframeSelected(0);
+    setTimeframeSelected(prefixedList ? listToTimeframe[prefixedList] : 0);
   };
   const toggleTimeframeSelected = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setTimeframeSelected((timeframeSelected + 1) % 3);
     LayoutAnimation.configureNext({
-      duration: 250,
+      duration: 60,
       update: { type: "spring", springDamping: 0.7 },
     });
   };
+  useEffect(() => {
+    setInputText(todo ? todo.text : "");
+  }, [todo]);
+
+  useEffect(() => {
+    setTimeframeSelected(prefixedList ? listToTimeframe[prefixedList] : 0);
+  }, [prefixedList]);
 
   const timeframeScaleAnim = useRef(new Animated.Value(1)).current;
   const submitScaleAnim = useRef(new Animated.Value(1)).current;
@@ -74,6 +90,62 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
         [listToUpdateId]: { ...lists[listToUpdateId], items: newListItems },
       },
     });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    handleClose();
+  };
+
+  const handleUpdateItem = async () => {
+    console.log("saving", { todo, prefixedList });
+    const newListId = timeframeOptions[timeframeSelected].id;
+    const oldListId = prefixedList;
+
+    // if we don't have to move the todo to another list
+    if (newListId === oldListId) {
+      const newTodo = { text: inputText, done: false, id: todo.id };
+      const oldListItems = lists[oldListId].items;
+
+      const newListItems = oldListItems.map((oldItem) => {
+        return oldItem.id === todo.id ? newTodo : oldItem;
+      });
+      LayoutAnimation.configureNext({
+        duration: 500,
+        create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
+      });
+      await setStorage({
+        theme,
+        current: newListId,
+        lists: {
+          ...lists,
+          [newListId]: { ...lists[newListId], items: newListItems },
+        },
+      });
+    } else {
+      const newTodo = { text: inputText, done: false, id: todo.id };
+      const oldListItems = lists[oldListId].items;
+
+      const oldListNewItems = oldListItems.filter((oldItem) => {
+        return oldItem.id !== todo.id;
+      });
+
+      const newListItems = lists[newListId].items;
+      const newListNewItems = [...newListItems, newTodo];
+      LayoutAnimation.configureNext({
+        duration: 500,
+        create: { type: "linear", property: "opacity" },
+        update: { type: "spring", springDamping: 0.7 },
+        // delete: { type: "linear", property: "opacity" },
+      });
+      await setStorage({
+        theme,
+        current: oldListId,
+        lists: {
+          ...lists,
+          [newListId]: { ...lists[newListId], items: newListNewItems },
+          [oldListId]: { ...lists[oldListId], items: oldListNewItems },
+        },
+      });
+    }
+    // after changes
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     handleClose();
   };
@@ -122,7 +194,7 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
               <View>
                 <TouchableOpacity
                   activeOpacity={0.75}
-                  onPress={handleCreateItem}
+                  onPress={todo ? handleUpdateItem : handleCreateItem}
                   onPressIn={() => animateOnPressIn(submitScaleAnim)}
                   onPressOut={() => animateOnPressOut(submitScaleAnim)}
                 >
@@ -139,12 +211,12 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
                         styles.createButtonText(theme),
                       ]}
                     >
-                      add
+                      {todo ? "save" : "add"}
                     </Text>
                   </Animated.View>
                 </TouchableOpacity>
               </View>
-              {!prefixedList && (
+              {(!prefixedList || todo) && (
                 <View>
                   <TouchableOpacity
                     activeOpacity={0.75}

@@ -8,12 +8,17 @@ import TodoModal from "../components/TodoModal";
 
 export default function TodosScreen() {
   const [{ lists, current, theme }, setStorage] = useMgmt();
-  // const [inspectedTodo, setInspectedTodo] = useState();
+  const [inspectedTodo, setInspectedTodo] = useState();
   const headerHeight = useHeaderHeight();
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleNavigate = async (listId) => {
     console.log(listId);
+  };
+
+  const setTodo = (todo) => {
+    setInspectedTodo(todo);
+    setModalIsOpen(true);
   };
 
   const toggleDone = async ({ todoId }) => {
@@ -31,6 +36,7 @@ export default function TodosScreen() {
   const handleCloseNewTodo = () => {
     Keyboard.dismiss();
     setModalIsOpen(false);
+    setInspectedTodo(null);
   };
 
   return (
@@ -44,6 +50,7 @@ export default function TodosScreen() {
           <TodoList
             todos={lists[current] ? lists[current].items : []}
             toggleDone={toggleDone}
+            setTodo={setTodo}
           />
         </View>
       </ScrollView>
@@ -53,6 +60,7 @@ export default function TodosScreen() {
         close={handleCloseNewTodo}
         handleNavigate={handleNavigate}
         prefixedList={current}
+        todo={inspectedTodo}
       />
     </View>
   );
