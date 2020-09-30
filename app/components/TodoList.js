@@ -3,9 +3,10 @@ import { View, StyleSheet, Text } from "react-native";
 import Todo from "./Todo";
 import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
+import { emojiSets } from "../constants/constants";
 
 export default function TodoList({ todos, toggleDone, setTodo }) {
-  const [{ theme, current }] = useMgmt();
+  const [{ theme, current, color }] = useMgmt();
   if (todos.filter((todo) => !todo.done).length === 0) {
     return (
       <View style={styles.emptyTodolist}>
@@ -13,7 +14,7 @@ export default function TodoList({ todos, toggleDone, setTodo }) {
           <Text style={styles.emptyTodolistText(theme)}>
             {`hooray, you're free ${current}!`}
           </Text>
-          <Text style={styles.emptyTodolistEmoji}>🕺</Text>
+          <Text style={styles.emptyTodolistEmoji}>{emojiSets[color].done}</Text>
         </View>
       </View>
     );
@@ -30,9 +31,6 @@ export default function TodoList({ todos, toggleDone, setTodo }) {
             setTodo={setTodo}
           />
         ))}
-      <Text style={styles.doneTitle}>
-        {todos.filter((todo) => todo.done).length} done
-      </Text>
     </View>
   );
 }
@@ -57,8 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     padding: 15,
     borderRadius: 20,
-    backgroundColor:
-      theme === "dark" ? "rgba(120,190,255,0.15)" : "rgba(0,0,0,0.05)",
+    backgroundColor: theme === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     alignItems: "center",
     justifyContent: "center",
   }),

@@ -12,7 +12,7 @@ export default function ListsScreen({ navigation }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleNavigate = async (listId) => {
-    await setStorage({ ...state, current: listId });
+    await setStorage({ current: listId });
     navigation.navigate("List");
   };
 

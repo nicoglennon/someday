@@ -13,30 +13,37 @@ import * as Haptics from "expo-haptics";
 import { useMgmt } from "../hooks/useMgmt";
 import shortid from "shortid";
 import PropTypes from "prop-types";
+import { emojiSets } from "../constants/constants";
 
-const timeframeOptions = [
-  { emoji: "💅", id: "today" },
-  { emoji: "☂️", id: "tomorrow" },
-  { emoji: "🔮", id: "someday" },
-];
+const timeframeOptions = ["today", "tomorrow", "someday"];
 
 const listToTimeframe = {
   today: 0,
   tomorrow: 1,
   someday: 2,
 };
-export default function TodoModal({ todo, open, close, prefixedList }) {
+export default function TodoModal({
+  todo,
+  open,
+  close,
+  clearTodo = () => {},
+  prefixedList,
+}) {
   console.log({ todo, prefixedList });
   const [inputText, setInputText] = useState("");
-  const [{ lists, theme }, setStorage] = useMgmt();
+  const [{ lists, theme, color }, setStorage] = useMgmt();
   const [timeframeSelected, setTimeframeSelected] = useState(
     prefixedList ? listToTimeframe[prefixedList] : 0,
   );
   console.log("timeframeSelected: ", timeframeSelected);
   const handleClose = () => {
     close();
-    setInputText("");
+  };
+
+  const handleModalHidden = () => {
+    setInputText(todo ? todo.text : "");
     setTimeframeSelected(prefixedList ? listToTimeframe[prefixedList] : 0);
+    clearTodo();
   };
   const toggleTimeframeSelected = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -73,8 +80,7 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
 
   const handleCreateItem = async () => {
     const newItem = { text: inputText, done: false, id: shortid.generate() };
-    const listToUpdateId =
-      prefixedList || timeframeOptions[timeframeSelected].id;
+    const listToUpdateId = prefixedList || timeframeOptions[timeframeSelected];
     const oldListItems = lists[listToUpdateId].items;
     const newListItems = [...oldListItems, newItem];
     // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -83,7 +89,6 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
       create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
     });
     await setStorage({
-      theme,
       current: listToUpdateId,
       lists: {
         ...lists,
@@ -96,7 +101,7 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
 
   const handleUpdateItem = async () => {
     console.log("saving", { todo, prefixedList });
-    const newListId = timeframeOptions[timeframeSelected].id;
+    const newListId = timeframeOptions[timeframeSelected];
     const oldListId = prefixedList;
 
     // if we don't have to move the todo to another list
@@ -112,7 +117,6 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
         create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
       });
       await setStorage({
-        theme,
         current: newListId,
         lists: {
           ...lists,
@@ -136,7 +140,6 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
         // delete: { type: "linear", property: "opacity" },
       });
       await setStorage({
-        theme,
         current: oldListId,
         lists: {
           ...lists,
@@ -156,7 +159,8 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
         isVisible={open}
         onSwipeComplete={handleClose}
         swipeDirection={["down"]}
-        animationInTiming={600}
+        animationInTiming={500}
+        backdropTransitionOutTiming={0}
         animationIn={{
           from: {
             translateY: 300,
@@ -168,8 +172,12 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
         }}
         style={styles.modal}
         onBackdropPress={handleClose}
-        backdropColor="#111"
+        backdropColor="#000"
         avoidKeyboard
+        // useNativeDriver
+        // hideModalContentWhileAnimating
+        onModalHide={handleModalHidden}
+        backdropOpacity={0.85}
       >
         <View style={styles.content(theme)}>
           <View style={styles.dragbar}></View>
@@ -180,13 +188,15 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
               style={styles.input(theme)}
               onChangeText={(text) => {
                 LayoutAnimation.configureNext({
-                  duration: 600,
-                  update: { type: "spring", springDamping: 0.6 },
+                  duration: 400,
+                  update: { type: "spring", springDamping: 0.7 },
                 });
                 setInputText(text);
               }}
-              placeholder="someday I will..."
-              autoFocus
+              placeholder={`${
+                prefixedList ? prefixedList : "someday"
+              } I will...`}
+              autoFocus={!todo}
             />
           </View>
           {!!inputText && (
@@ -229,7 +239,7 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
                     <Animated.View
                       style={[
                         styles.generalButton,
-                        styles.timeframeButton,
+                        styles.timeframeButton(theme),
                         { transform: [{ scale: timeframeScaleAnim }] },
                       ]}
                     >
@@ -239,10 +249,10 @@ export default function TodoModal({ todo, open, close, prefixedList }) {
                           styles.emojiText,
                         ]}
                       >
-                        {timeframeOptions[timeframeSelected].emoji}{" "}
+                        {emojiSets[color][timeframeOptions[timeframeSelected]]}{" "}
                       </Text>
                       <Text style={[styles.generalButtonText(theme)]}>
-                        {timeframeOptions[timeframeSelected].id}
+                        {timeframeOptions[timeframeSelected]}
                       </Text>
                     </Animated.View>
                   </TouchableOpacity>
@@ -260,6 +270,7 @@ TodoModal.propTypes = {
   todo: PropTypes.object,
   open: PropTypes.bool.isRequired,
   close: PropTypes.func.isRequired,
+  clearTodo: PropTypes.func,
   prefixedList: PropTypes.string,
 };
 
@@ -287,8 +298,7 @@ const styles = StyleSheet.create({
   textInputWrapper: { width: "100%" },
   input: (theme) => ({
     color: theme === "dark" ? "#fff" : "#333",
-    backgroundColor:
-      theme === "dark" ? "rgba(120,190,255,0.15)" : "rgba(0,0,0,0.05)",
+    backgroundColor: theme === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     padding: 20,
     paddingVertical: 30,
     fontSize: 22,
@@ -321,12 +331,12 @@ const styles = StyleSheet.create({
   emojiText: {
     fontSize: 35,
   },
-  timeframeButton: {
-    backgroundColor: "rgba(0,0,0,0.05)",
+  timeframeButton: (theme) => ({
+    backgroundColor: theme === "dark" ? "#101a23" : "rgba(0,0,0,0.05)",
     borderWidth: 3,
     paddingVertical: 8,
     borderColor: "lightgray",
-  },
+  }),
   createButton: (theme) => ({
     backgroundColor: theme === "dark" ? "white" : "#333",
     borderColor: theme === "dark" ? "white" : "#333",

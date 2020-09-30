@@ -5,9 +5,10 @@ import { useMgmt } from "../hooks/useMgmt";
 import { useHeaderHeight } from "@react-navigation/stack";
 import AddItemBtn from "../components/AddItemBtn";
 import TodoModal from "../components/TodoModal";
+import { emojiSets } from "../constants/constants";
 
 export default function TodosScreen() {
-  const [{ lists, current, theme }, setStorage] = useMgmt();
+  const [{ lists, current, theme, color }, setStorage] = useMgmt();
   const [inspectedTodo, setInspectedTodo] = useState();
   const headerHeight = useHeaderHeight();
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -27,8 +28,6 @@ export default function TodosScreen() {
       return todo.id !== todoId;
     });
     await setStorage({
-      theme,
-      current,
       lists: { ...lists, [current]: { ...lists[current], items: newTodos } },
     });
   };
@@ -36,6 +35,9 @@ export default function TodosScreen() {
   const handleCloseNewTodo = () => {
     Keyboard.dismiss();
     setModalIsOpen(false);
+  };
+
+  const clearInspectedTodo = () => {
     setInspectedTodo(null);
   };
 
@@ -44,8 +46,15 @@ export default function TodosScreen() {
       <ScrollView style={{ paddingTop: headerHeight }}>
         <View style={styles.todosScreen}>
           <View>
-            <Text style={styles.listEmoji}>{lists[current].emoji}</Text>
-            <Text style={styles.listTitle(theme)}>{lists[current].title}</Text>
+            <Text style={styles.listEmoji}>{emojiSets[color][current]}</Text>
+            <View style={styles.listTitleLine}>
+              <Text style={styles.listTitle(theme)}>
+                {lists[current].title}
+              </Text>
+              <Text style={styles.listTotal(theme)}>
+                {lists[current].items.length}
+              </Text>
+            </View>
           </View>
           <TodoList
             todos={lists[current] ? lists[current].items : []}
@@ -58,6 +67,7 @@ export default function TodosScreen() {
       <TodoModal
         open={modalIsOpen}
         close={handleCloseNewTodo}
+        clearTodo={clearInspectedTodo}
         handleNavigate={handleNavigate}
         prefixedList={current}
         todo={inspectedTodo}
@@ -79,12 +89,24 @@ const styles = StyleSheet.create({
     paddingBottom: 220,
   },
   listEmoji: {
-    fontSize: 50,
+    fontSize: 70,
+  },
+  listTitleLine: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "baseline",
   },
   listTitle: (theme) => ({
     marginTop: 0,
     fontSize: 36,
     fontFamily: "DMSans_700Bold",
     color: theme === "dark" ? "#fff" : "#333",
+  }),
+  listTotal: (theme) => ({
+    marginTop: 0,
+    fontSize: 30,
+    fontFamily: "DMSans_700Bold",
+    color: theme === "dark" ? "#555" : "lightgrey",
   }),
 });

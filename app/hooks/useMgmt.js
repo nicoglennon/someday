@@ -9,10 +9,10 @@ export const MgmtProvider = ({ initialState, children }) => {
   const setStorage = async (newState) => {
     console.log("Setting data async:");
     try {
-      const jsonNewState = JSON.stringify(newState);
+      const jsonNewState = JSON.stringify({ ...state, ...newState });
       console.log("New state:", jsonNewState);
       await AsyncStorage.setItem("@storage", jsonNewState);
-      setState(newState);
+      setState({ ...state, ...newState });
     } catch (e) {
       alert("Error saving state!");
     }

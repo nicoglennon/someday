@@ -4,9 +4,10 @@ import ListsScreen from "../screens/ListsScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useMgmt } from "../hooks/useMgmt";
-import ToggleThemeButton from "./ToggleThemeButton";
+import SettingsButton from "./SettingsButton";
 import ClearDataButton from "./ClearDataButton";
 import { StatusBar } from "expo-status-bar";
+
 const Stack = createStackNavigator();
 
 export default function Navigator() {
@@ -30,7 +31,7 @@ export default function Navigator() {
             headerTitle: "",
             headerTintColor: theme === "dark" ? "white" : "black",
             // eslint-disable-next-line react/display-name
-            headerRight: () => <ToggleThemeButton />,
+            headerRight: () => <SettingsButton />,
             // eslint-disable-next-line react/display-name
             headerLeft: () => <ClearDataButton />,
           }}

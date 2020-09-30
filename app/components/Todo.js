@@ -12,10 +12,11 @@ import * as Haptics from "expo-haptics";
 import { Easing } from "react-native-reanimated";
 import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
+import { emojiSets } from "../constants/constants";
 
 export default function Todo({ todo, toggleDone, setTodo }) {
   const [checked, setChecked] = useState(false);
-  const [{ theme }] = useMgmt();
+  const [{ theme, color }] = useMgmt();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const deleteScaleAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -96,7 +97,7 @@ export default function Todo({ todo, toggleDone, setTodo }) {
             onPressIn={animateOnPressInList}
             onPressOut={animateOnPressOutList}
           >
-            <View style={styles.todoCheckbox(theme, checked)}>
+            <View style={styles.todoCheckbox(theme, color, checked)}>
               <Text style={styles.checkboxText}>
                 {checked && <Octicons name="check" size={24} color="white" />}
               </Text>
@@ -121,8 +122,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 0,
     textAlign: "left",
-    backgroundColor:
-      theme === "dark" ? "rgba(120,190,255,0.15)" : "rgba(0,0,0,0.05)",
+    backgroundColor: theme === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     borderRadius: 24,
     flexDirection: "column",
     justifyContent: "space-between",
@@ -143,8 +143,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  todoCheckbox: (theme, checked) => ({
-    backgroundColor: checked ? "orchid" : theme === "dark" ? "#000" : "#fff",
+  todoCheckbox: (theme, color, checked) => ({
+    backgroundColor: checked
+      ? emojiSets[color].checkboxColor
+      : theme === "dark"
+      ? "#000"
+      : "#fff",
     justifyContent: "center",
     alignItems: "center",
     width: 30,
@@ -153,7 +157,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 2,
     borderColor: checked
-      ? "orchid"
+      ? emojiSets[color].checkboxColor
       : theme === "dark"
       ? "lightgray"
       : "darkgray",
@@ -192,8 +196,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    backgroundColor:
-      theme === "dark" ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.5)",
+    backgroundColor: theme === "dark" ? "#14222e" : "rgba(255,255,255,0.5)",
     borderColor: theme === "dark" ? "lightgray" : "darkgray",
   }),
   doneButtonEmojiText: {

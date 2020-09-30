@@ -9,9 +9,10 @@ import {
 import { useMgmt } from "../hooks/useMgmt";
 import * as Haptics from "expo-haptics";
 import PropTypes from "prop-types";
+import { emojiSets } from "../constants/constants";
 
 export default function List({ list, handleNavigate }) {
-  const [{ theme }] = useMgmt();
+  const [{ theme, color }] = useMgmt();
 
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const animateOnPressInList = () => {
@@ -42,7 +43,7 @@ export default function List({ list, handleNavigate }) {
         style={[styles.list(theme), { transform: [{ scale: fadeAnim }] }]}
       >
         <View style={styles.listChild}>
-          <Text style={styles.listEmoji}>{list.emoji}</Text>
+          <Text style={styles.listEmoji}>{emojiSets[color][list.id]}</Text>
           <Text style={styles.listText(theme)}>{list.title}</Text>
         </View>
         {list.id !== "someday" && (
@@ -71,8 +72,7 @@ const styles = StyleSheet.create({
     paddingTop: "10%",
     marginBottom: 12,
     textAlign: "left",
-    backgroundColor:
-      theme === "dark" ? "rgba(120,190,255,0.15)" : "rgba(0,0,0,0.05)",
+    backgroundColor: theme === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     borderRadius: 25,
     flexDirection: "row",
     alignItems: "flex-end",
