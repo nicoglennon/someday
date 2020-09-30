@@ -13,10 +13,10 @@ export default function SettingsButton() {
     state.user ? state.user.email : "",
   );
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
-  const handleToggleTheme = async () => {
+  const handleTogglemode = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     await setStorage({
-      theme: state.theme === "light" ? "dark" : "light",
+      mode: state.mode === "light" ? "dark" : "light",
     });
   };
 
@@ -42,7 +42,7 @@ export default function SettingsButton() {
           <Feather
             name="settings"
             size={28}
-            color={state.theme === "light" ? "#333" : "#fff"}
+            color={state.mode === "light" ? "#333" : "#fff"}
           />
         </View>
       </TouchableOpacity>
@@ -68,46 +68,46 @@ export default function SettingsButton() {
         avoidKeyboard
         backdropOpacity={0.85}
       >
-        <View style={styles.modalContent(state.theme)}>
+        <View style={styles.modalContent(state.mode)}>
           <View style={styles.topBar}>
-            <Text style={styles.settingsTitle(state.theme)}>settings</Text>
+            <Text style={styles.settingsTitle(state.mode)}>settings</Text>
           </View>
           <View style={styles.settingsRows}>
-            <View style={styles.settingsRow}>
+            {/* <View style={styles.settingsRow}>
               <View style={styles.textInputWrapper}>
                 <TextInput
                   value={emailInput}
                   placeholderTextColor={
-                    state.theme === "dark" ? "darkgray" : "lightgray"
+                    state.mode === "dark" ? "darkgray" : "lightgray"
                   }
-                  style={styles.input(state.theme)}
+                  style={styles.input(state.mode)}
                   onChangeText={(text) => {
                     setEmailInput(text);
                   }}
                   placeholder={"your email..."}
                 />
               </View>
-            </View>
-            <View style={styles.settingsRow}>
-              <Text style={styles.settingsLabel(state.theme)}>theme:</Text>
-              <TouchableOpacity onPress={handleToggleTheme}>
+            </View> */}
+            <TouchableOpacity onPress={handleTogglemode}>
+              <View style={styles.settingsRow(state.mode)}>
+                <Text style={styles.settingsLabel(state.mode)}>mode</Text>
                 <View style={styles.iconWrapper}>
                   <Feather
-                    name={state.theme === "light" ? "sun" : "moon"}
-                    size={24}
-                    color={state.theme === "light" ? "black" : "white"}
+                    name={state.mode === "light" ? "sun" : "moon"}
+                    size={30}
+                    color={state.mode === "light" ? "#333" : "#fff"}
                   />
                 </View>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.settingsRow}>
-              <Text style={styles.settingsLabel(state.theme)}>color:</Text>
-              <TouchableOpacity onPress={handleToggleColor}>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleToggleColor}>
+              <View style={styles.settingsRow(state.mode)}>
+                <Text style={styles.settingsLabel(state.mode)}>color</Text>
                 <View style={styles.iconWrapper}>
                   <View style={styles.colorButton(state.color)}></View>
                 </View>
-              </TouchableOpacity>
-            </View>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -116,44 +116,44 @@ export default function SettingsButton() {
 }
 
 const styles = StyleSheet.create({
-  modalContent: (theme) => ({
-    backgroundColor: theme === "dark" ? "#14222e" : "#fff",
+  settingsIconWrapper: {
+    paddingHorizontal: 15,
+    borderRadius: 30,
+  },
+  modalContent: (mode) => ({
+    backgroundColor: mode === "dark" ? "#14222e" : "#fff",
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 30,
   }),
-  settingsIconWrapper: {
-    paddingHorizontal: 15,
-    borderRadius: 30,
-  },
   topBar: {
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
-  exitButtonWrapper: (theme) => ({
+  exitButtonWrapper: (mode) => ({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: "100",
-    backgroundColor: theme === "dark" ? "#fff" : "#333",
+    backgroundColor: mode === "dark" ? "#fff" : "#333",
   }),
-  settingsTitle: (theme) => ({
+  settingsTitle: (mode) => ({
     fontFamily: "DMSans_700Bold",
     fontSize: 28,
-    marginBottom: 20,
-    color: theme === "dark" ? "#fff" : "#333",
+    marginBottom: 10,
+    color: mode === "dark" ? "#fff" : "#333",
   }),
-  settingsLabel: (theme) => ({
+  settingsLabel: (mode) => ({
     fontFamily: "DMSans_400Regular",
-    fontSize: 20,
-    color: theme === "dark" ? "#fff" : "#333",
+    fontSize: 24,
+    color: mode === "dark" ? "#fff" : "#333",
   }),
   textInputWrapper: { width: "100%" },
-  input: (theme) => ({
-    color: theme === "dark" ? "#fff" : "#333",
-    backgroundColor: theme === "dark" ? "#1c3740" : "rgba(0,0,0,0.05)",
+  input: (mode) => ({
+    color: mode === "dark" ? "#fff" : "#333",
+    backgroundColor: mode === "dark" ? "#1c3740" : "rgba(0,0,0,0.05)",
     padding: 25,
     width: "100%",
     paddingVertical: 20,
@@ -161,16 +161,20 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     fontFamily: "DMSans_400Regular",
   }),
-  settingsRows: {},
-  settingsRow: {
+  settingsRows: { width: "100%" },
+  settingsRow: (mode) => ({
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 20,
-  },
+    justifyContent: "space-between",
+    marginVertical: 6,
+    padding: 24,
+    borderRadius: 26,
+    backgroundColor:
+      mode === "dark" ? "rgba(256,256,256, 0.05)" : "rgba(0,0,0, 0.05)",
+  }),
   iconWrapper: {
-    paddingHorizontal: 15,
-    borderRadius: 30,
+    padding: 0,
   },
   colorButton: (color) => ({
     width: 30,
@@ -178,9 +182,9 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: emojiSets[color].checkboxColor,
   }),
-  iconText: (theme) => ({
+  iconText: (mode) => ({
     fontSize: 20,
-    color: theme === "dark" ? "#fff" : "#333",
+    color: mode === "dark" ? "#fff" : "#333",
     fontFamily: "DMSans_400Regular",
   }),
 });

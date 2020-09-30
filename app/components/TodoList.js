@@ -6,12 +6,12 @@ import PropTypes from "prop-types";
 import { emojiSets } from "../constants/constants";
 
 export default function TodoList({ todos, toggleDone, setTodo }) {
-  const [{ theme, current, color }] = useMgmt();
+  const [{ mode, current, color }] = useMgmt();
   if (todos.filter((todo) => !todo.done).length === 0) {
     return (
       <View style={styles.emptyTodolist}>
-        <View style={styles.emptyTodolistTextWrapper(theme)}>
-          <Text style={styles.emptyTodolistText(theme)}>
+        <View style={styles.emptyTodolistTextWrapper(mode)}>
+          <Text style={styles.emptyTodolistText(mode)}>
             {`hooray, you're free ${current}!`}
           </Text>
           <Text style={styles.emptyTodolistEmoji}>{emojiSets[color].done}</Text>
@@ -51,17 +51,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  emptyTodolistTextWrapper: (theme) => ({
+  emptyTodolistTextWrapper: (mode) => ({
     flexDirection: "row",
     padding: 15,
     borderRadius: 20,
-    backgroundColor: theme === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
+    backgroundColor: mode === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     alignItems: "center",
     justifyContent: "center",
   }),
-  emptyTodolistText: (theme) => ({
+  emptyTodolistText: (mode) => ({
     fontSize: 18,
-    color: theme === "dark" ? "#fff" : "#333",
+    color: mode === "dark" ? "#fff" : "#333",
     fontFamily: "DMSans_400Regular",
   }),
   emptyTodolistEmoji: {

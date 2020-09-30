@@ -6,7 +6,7 @@ import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
 
 export default function AddItemBtn({ setModalIsOpen }) {
-  const [{ theme }] = useMgmt();
+  const [{ mode }] = useMgmt();
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const animateOnPressInList = () => {
@@ -35,7 +35,7 @@ export default function AddItemBtn({ setModalIsOpen }) {
         activeOpacity={0.75}
       >
         <Animated.View
-          style={[styles.addItem(theme), { transform: [{ scale: scaleAnim }] }]}
+          style={[styles.addItem(mode), { transform: [{ scale: scaleAnim }] }]}
         >
           <Text style={styles.addItemText}>✍️</Text>
         </Animated.View>
@@ -58,10 +58,10 @@ const styles = StyleSheet.create({
     bottom: 30,
     right: 30,
   },
-  addItem: (theme) => ({
+  addItem: (mode) => ({
     height: 60,
     width: 60,
-    backgroundColor: theme === "dark" ? "slategray" : "lightgrey",
+    backgroundColor: mode === "dark" ? "slategray" : "lightgrey",
     borderRadius: 30,
     flexDirection: "row",
     alignItems: "center",

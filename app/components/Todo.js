@@ -16,7 +16,7 @@ import { emojiSets } from "../constants/constants";
 
 export default function Todo({ todo, toggleDone, setTodo }) {
   const [checked, setChecked] = useState(false);
-  const [{ theme, color }] = useMgmt();
+  const [{ mode, color }] = useMgmt();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const deleteScaleAnim = useRef(new Animated.Value(1)).current;
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -78,14 +78,14 @@ export default function Todo({ todo, toggleDone, setTodo }) {
     >
       <Animated.View
         style={[
-          styles.todo(theme),
+          styles.todo(mode),
           { transform: [{ scale: scaleAnim }, { scale: deleteScaleAnim }] },
           { opacity: fadeAnim },
         ]}
       >
         <View style={styles.todoBigChild}>
           <View style={styles.todoTextWrapper}>
-            <Text style={styles.todoText(theme)}>{todo.text}</Text>
+            <Text style={styles.todoText(mode)}>{todo.text}</Text>
           </View>
           <TouchableOpacity
             activeOpacity={0.75}
@@ -97,7 +97,7 @@ export default function Todo({ todo, toggleDone, setTodo }) {
             onPressIn={animateOnPressInList}
             onPressOut={animateOnPressOutList}
           >
-            <View style={styles.todoCheckbox(theme, color, checked)}>
+            <View style={styles.todoCheckbox(mode, color, checked)}>
               <Text style={styles.checkboxText}>
                 {checked && <Octicons name="check" size={24} color="white" />}
               </Text>
@@ -116,13 +116,13 @@ Todo.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  todo: (theme) => ({
+  todo: (mode) => ({
     flex: 1,
     padding: 20,
     marginTop: 10,
     marginBottom: 0,
     textAlign: "left",
-    backgroundColor: theme === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
+    backgroundColor: mode === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     borderRadius: 24,
     flexDirection: "column",
     justifyContent: "space-between",
@@ -131,10 +131,10 @@ const styles = StyleSheet.create({
   todoTextWrapper: {
     flex: 1,
   },
-  todoText: (theme) => ({
+  todoText: (mode) => ({
     fontSize: 19,
     fontFamily: "DMSans_400Regular",
-    color: theme === "dark" ? "#fff" : "#333",
+    color: mode === "dark" ? "#fff" : "#333",
   }),
   todoBigChild: {
     flex: 1,
@@ -143,10 +143,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  todoCheckbox: (theme, color, checked) => ({
+  todoCheckbox: (mode, color, checked) => ({
     backgroundColor: checked
       ? emojiSets[color].checkboxColor
-      : theme === "dark"
+      : mode === "dark"
       ? "#000"
       : "#fff",
     justifyContent: "center",
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: checked
       ? emojiSets[color].checkboxColor
-      : theme === "dark"
+      : mode === "dark"
       ? "lightgray"
       : "darkgray",
   }),
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     fontFamily: "DMSans_700Bold",
   },
-  inspectButton: (theme) => ({
+  inspectButton: (mode) => ({
     marginRight: 10,
     padding: 10,
     paddingVertical: 6,
@@ -196,15 +196,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    backgroundColor: theme === "dark" ? "#14222e" : "rgba(255,255,255,0.5)",
-    borderColor: theme === "dark" ? "lightgray" : "darkgray",
+    backgroundColor: mode === "dark" ? "#14222e" : "rgba(255,255,255,0.5)",
+    borderColor: mode === "dark" ? "lightgray" : "darkgray",
   }),
   doneButtonEmojiText: {
     fontSize: 20,
     marginRight: 4,
   },
-  doneButtonText: (theme) => ({
-    color: theme === "dark" ? "#fff" : "#333",
+  doneButtonText: (mode) => ({
+    color: mode === "dark" ? "#fff" : "#333",
     fontFamily: "DMSans_700Bold",
     fontSize: 16,
   }),

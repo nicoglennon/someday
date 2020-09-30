@@ -11,10 +11,10 @@ import { StatusBar } from "expo-status-bar";
 const Stack = createStackNavigator();
 
 export default function Navigator() {
-  const [{ theme }] = useMgmt();
+  const [{ mode }] = useMgmt();
   return (
     <NavigationContainer>
-      <StatusBar style={theme === "dark" ? "light" : "dark"} />
+      <StatusBar style={mode === "dark" ? "light" : "dark"} />
       <Stack.Navigator
         screenOptions={{
           backgroundColor: "transparent",
@@ -29,7 +29,7 @@ export default function Navigator() {
           component={ListsScreen}
           options={{
             headerTitle: "",
-            headerTintColor: theme === "dark" ? "white" : "black",
+            headerTintColor: mode === "dark" ? "white" : "black",
             // eslint-disable-next-line react/display-name
             headerRight: () => <SettingsButton />,
             // eslint-disable-next-line react/display-name
@@ -43,7 +43,7 @@ export default function Navigator() {
             headerBackTitle: "back",
             headerBackTitleStyle: { fontSize: 20 },
             headerTitle: "",
-            headerTintColor: theme === "dark" ? "white" : "black",
+            headerTintColor: mode === "dark" ? "white" : "black",
           }}
         />
       </Stack.Navigator>

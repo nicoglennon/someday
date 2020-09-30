@@ -4,7 +4,7 @@ import { useMgmt } from "../hooks/useMgmt";
 import * as Haptics from "expo-haptics";
 import { initialState } from "../constants/constants";
 
-export default function ToggleThemeButton() {
+export default function TogglemodeButton() {
   const [state, setStorage] = useMgmt();
 
   const handleClearData = async () => {
@@ -14,7 +14,7 @@ export default function ToggleThemeButton() {
   return (
     <TouchableOpacity onPress={handleClearData}>
       <View style={styles.iconWrapper}>
-        <Text style={styles.iconText(state.theme)}>clear</Text>
+        <Text style={styles.iconText(state.mode)}>clear</Text>
       </View>
     </TouchableOpacity>
   );
@@ -24,9 +24,9 @@ const styles = StyleSheet.create({
   iconWrapper: {
     paddingHorizontal: 15,
   },
-  iconText: (theme) => ({
+  iconText: (mode) => ({
     fontSize: 20,
-    color: theme === "dark" ? "#fff" : "#333",
+    color: mode === "dark" ? "#fff" : "#333",
     fontFamily: "DMSans_400Regular",
   }),
 });

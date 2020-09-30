@@ -8,7 +8,7 @@ import TodoModal from "../components/TodoModal";
 import { emojiSets } from "../constants/constants";
 
 export default function TodosScreen() {
-  const [{ lists, current, theme, color }, setStorage] = useMgmt();
+  const [{ lists, current, mode, color }, setStorage] = useMgmt();
   const [inspectedTodo, setInspectedTodo] = useState();
   const headerHeight = useHeaderHeight();
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -42,16 +42,14 @@ export default function TodosScreen() {
   };
 
   return (
-    <View style={[styles.safeArea(theme)]}>
+    <View style={[styles.safeArea(mode)]}>
       <ScrollView style={{ paddingTop: headerHeight }}>
         <View style={styles.todosScreen}>
           <View>
             <Text style={styles.listEmoji}>{emojiSets[color][current]}</Text>
             <View style={styles.listTitleLine}>
-              <Text style={styles.listTitle(theme)}>
-                {lists[current].title}
-              </Text>
-              <Text style={styles.listTotal(theme)}>
+              <Text style={styles.listTitle(mode)}>{lists[current].title}</Text>
+              <Text style={styles.listTotal(mode)}>
                 {lists[current].items.length}
               </Text>
             </View>
@@ -77,11 +75,11 @@ export default function TodosScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: (theme) => ({
+  safeArea: (mode) => ({
     flex: 1,
     justifyContent: "flex-start",
     width: "100%",
-    backgroundColor: theme === "dark" ? "black" : null,
+    backgroundColor: mode === "dark" ? "black" : null,
   }),
   todosScreen: {
     paddingLeft: 15,
@@ -97,16 +95,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "baseline",
   },
-  listTitle: (theme) => ({
+  listTitle: (mode) => ({
     marginTop: 0,
     fontSize: 36,
     fontFamily: "DMSans_700Bold",
-    color: theme === "dark" ? "#fff" : "#333",
+    color: mode === "dark" ? "#fff" : "#333",
   }),
-  listTotal: (theme) => ({
+  listTotal: (mode) => ({
     marginTop: 0,
     fontSize: 30,
     fontFamily: "DMSans_700Bold",
-    color: theme === "dark" ? "#555" : "lightgrey",
+    color: mode === "dark" ? "#555" : "lightgrey",
   }),
 });

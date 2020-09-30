@@ -12,7 +12,7 @@ import PropTypes from "prop-types";
 import { emojiSets } from "../constants/constants";
 
 export default function List({ list, handleNavigate }) {
-  const [{ theme, color }] = useMgmt();
+  const [{ mode, color }] = useMgmt();
 
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const animateOnPressInList = () => {
@@ -40,16 +40,16 @@ export default function List({ list, handleNavigate }) {
       onPressOut={animateOnPressOutList}
     >
       <Animated.View
-        style={[styles.list(theme), { transform: [{ scale: fadeAnim }] }]}
+        style={[styles.list(mode), { transform: [{ scale: fadeAnim }] }]}
       >
         <View style={styles.listChild}>
           <Text style={styles.listEmoji}>{emojiSets[color][list.id]}</Text>
-          <Text style={styles.listText(theme)}>{list.title}</Text>
+          <Text style={styles.listText(mode)}>{list.title}</Text>
         </View>
         {list.id !== "someday" && (
           <View style={styles.listChild}>
             <View style={styles.listBadge}>
-              <Text style={[styles.listText(theme), styles.badgeText]}>
+              <Text style={[styles.listText(mode), styles.badgeText]}>
                 {list.items.filter((item) => !item.done).length}
               </Text>
             </View>
@@ -66,23 +66,23 @@ List.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  list: (theme) => ({
+  list: (mode) => ({
     flex: 1,
     padding: 24,
     paddingTop: "10%",
     marginBottom: 12,
     textAlign: "left",
-    backgroundColor: theme === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
+    backgroundColor: mode === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     borderRadius: 25,
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "space-between",
   }),
-  listText: (theme) => ({
+  listText: (mode) => ({
     fontSize: 26,
     fontWeight: "bold",
     fontFamily: "DMSans_700Bold",
-    color: theme === "dark" ? "#fff" : "#333",
+    color: mode === "dark" ? "#fff" : "#333",
   }),
   listChild: {},
   listEmoji: {

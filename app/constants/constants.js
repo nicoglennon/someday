@@ -1,5 +1,5 @@
 export const initialState = {
-  theme: "light",
+  mode: "light",
   color: "purple",
   current: null,
   user: {

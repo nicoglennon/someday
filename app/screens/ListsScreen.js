@@ -23,7 +23,7 @@ export default function ListsScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.safeArea(state.theme)]}>
+    <View style={[styles.safeArea(state.mode)]}>
       <ScrollView style={{ paddingTop: headerHeight }}>
         <View style={styles.listsScreen}>
           <Text style={styles.versionText}>1.0</Text>
@@ -45,11 +45,11 @@ ListsScreen.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  safeArea: (theme) => ({
+  safeArea: (mode) => ({
     flex: 1,
     // justifyContent: "flex-start",
     width: "100%",
-    backgroundColor: theme === "dark" ? "black" : null,
+    backgroundColor: mode === "dark" ? "black" : null,
   }),
   listsScreen: {
     paddingLeft: 15,

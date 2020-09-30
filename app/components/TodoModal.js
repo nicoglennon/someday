@@ -31,7 +31,7 @@ export default function TodoModal({
 }) {
   console.log({ todo, prefixedList });
   const [inputText, setInputText] = useState("");
-  const [{ lists, theme, color }, setStorage] = useMgmt();
+  const [{ lists, mode, color }, setStorage] = useMgmt();
   const [timeframeSelected, setTimeframeSelected] = useState(
     prefixedList ? listToTimeframe[prefixedList] : 0,
   );
@@ -179,13 +179,13 @@ export default function TodoModal({
         onModalHide={handleModalHidden}
         backdropOpacity={0.85}
       >
-        <View style={styles.content(theme)}>
+        <View style={styles.content(mode)}>
           <View style={styles.dragbar}></View>
           <View style={styles.textInputWrapper}>
             <TextInput
               value={inputText}
-              placeholderTextColor={theme === "dark" ? "darkgray" : "lightgray"}
-              style={styles.input(theme)}
+              placeholderTextColor={mode === "dark" ? "darkgray" : "lightgray"}
+              style={styles.input(mode)}
               onChangeText={(text) => {
                 LayoutAnimation.configureNext({
                   duration: 400,
@@ -211,14 +211,14 @@ export default function TodoModal({
                   <Animated.View
                     style={[
                       styles.generalButton,
-                      styles.createButton(theme),
+                      styles.createButton(mode),
                       { transform: [{ scale: submitScaleAnim }] },
                     ]}
                   >
                     <Text
                       style={[
-                        styles.generalButtonText(theme),
-                        styles.createButtonText(theme),
+                        styles.generalButtonText(mode),
+                        styles.createButtonText(mode),
                       ]}
                     >
                       {todo ? "save" : "add"}
@@ -239,19 +239,19 @@ export default function TodoModal({
                     <Animated.View
                       style={[
                         styles.generalButton,
-                        styles.timeframeButton(theme),
+                        styles.timeframeButton(mode),
                         { transform: [{ scale: timeframeScaleAnim }] },
                       ]}
                     >
                       <Text
                         style={[
-                          styles.generalButtonText(theme),
+                          styles.generalButtonText(mode),
                           styles.emojiText,
                         ]}
                       >
                         {emojiSets[color][timeframeOptions[timeframeSelected]]}{" "}
                       </Text>
-                      <Text style={[styles.generalButtonText(theme)]}>
+                      <Text style={[styles.generalButtonText(mode)]}>
                         {timeframeOptions[timeframeSelected]}
                       </Text>
                     </Animated.View>
@@ -279,8 +279,8 @@ const styles = StyleSheet.create({
     margin: 0,
     justifyContent: "flex-end",
   },
-  content: (theme) => ({
-    backgroundColor: theme === "dark" ? "black" : "white",
+  content: (mode) => ({
+    backgroundColor: mode === "dark" ? "black" : "white",
     padding: 25,
     paddingTop: 15,
     justifyContent: "center",
@@ -296,9 +296,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   textInputWrapper: { width: "100%" },
-  input: (theme) => ({
-    color: theme === "dark" ? "#fff" : "#333",
-    backgroundColor: theme === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
+  input: (mode) => ({
+    color: mode === "dark" ? "#fff" : "#333",
+    backgroundColor: mode === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     padding: 20,
     paddingVertical: 30,
     fontSize: 22,
@@ -323,25 +323,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  generalButtonText: (theme) => ({
+  generalButtonText: (mode) => ({
     fontSize: 24,
     fontFamily: "DMSans_700Bold",
-    color: theme === "dark" ? "#fff" : "#333",
+    color: mode === "dark" ? "#fff" : "#333",
   }),
   emojiText: {
     fontSize: 35,
   },
-  timeframeButton: (theme) => ({
-    backgroundColor: theme === "dark" ? "#101a23" : "rgba(0,0,0,0.05)",
+  timeframeButton: (mode) => ({
+    backgroundColor: mode === "dark" ? "#101a23" : "rgba(0,0,0,0.05)",
     borderWidth: 3,
     paddingVertical: 8,
     borderColor: "lightgray",
   }),
-  createButton: (theme) => ({
-    backgroundColor: theme === "dark" ? "white" : "#333",
-    borderColor: theme === "dark" ? "white" : "#333",
+  createButton: (mode) => ({
+    backgroundColor: mode === "dark" ? "white" : "#333",
+    borderColor: mode === "dark" ? "white" : "#333",
   }),
-  createButtonText: (theme) => ({
-    color: theme === "dark" ? "#333" : "white",
+  createButtonText: (mode) => ({
+    color: mode === "dark" ? "#333" : "white",
   }),
 });
