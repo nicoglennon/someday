@@ -7,11 +7,13 @@ import { useMgmt } from "../hooks/useMgmt";
 import SettingsButton from "./SettingsButton";
 import ClearDataButton from "./ClearDataButton";
 import { StatusBar } from "expo-status-bar";
+import { initialState } from "../constants/constants";
 
 const Stack = createStackNavigator();
 
 export default function Navigator() {
-  const [{ mode }] = useMgmt();
+  const [{ mode }, setState] = useMgmt();
+  // setState(initialState);
   return (
     <NavigationContainer>
       <StatusBar style={mode === "dark" ? "light" : "dark"} />

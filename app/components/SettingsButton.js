@@ -6,25 +6,30 @@ import { Feather } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import { TextInput } from "react-native-gesture-handler";
 import { emojiSets } from "../constants/constants";
+import SettingsMenuRow from "./SettingsMenuRow";
+
+const colorsArray = Object.keys(emojiSets);
 
 export default function SettingsButton() {
-  const [state, setStorage] = useMgmt();
-  const [emailInput, setEmailInput] = useState(
-    state.user ? state.user.email : "",
-  );
+  const [{ mode, user, color }, setStorage] = useMgmt();
+  // const [emailInput, setEmailInput] = useState(user ? user.email : "");
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
-  const handleTogglemode = async () => {
+  const [selectedColorIndex, setSelectedColorIndex] = useState(
+    colorsArray.indexOf(color),
+  );
+  const handleToggleMode = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     await setStorage({
-      mode: state.mode === "light" ? "dark" : "light",
+      mode: mode === "light" ? "dark" : "light",
     });
   };
 
   const handleToggleColor = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     await setStorage({
-      color: state.color === "purple" ? "red" : "purple",
+      color: colorsArray[(selectedColorIndex + 1) % colorsArray.length],
     });
+    setSelectedColorIndex((selectedColorIndex + 1) % colorsArray.length);
   };
 
   const handleOpenModal = () => {
@@ -42,7 +47,7 @@ export default function SettingsButton() {
           <Feather
             name="settings"
             size={28}
-            color={state.mode === "light" ? "#333" : "#fff"}
+            color={mode === "light" ? "#333" : "#fff"}
           />
         </View>
       </TouchableOpacity>
@@ -68,9 +73,9 @@ export default function SettingsButton() {
         avoidKeyboard
         backdropOpacity={0.85}
       >
-        <View style={styles.modalContent(state.mode)}>
+        <View style={styles.modalContent(mode)}>
           <View style={styles.topBar}>
-            <Text style={styles.settingsTitle(state.mode)}>settings</Text>
+            <Text style={styles.settingsTitle(mode)}>settings</Text>
           </View>
           <View style={styles.settingsRows}>
             {/* <View style={styles.settingsRow}>
@@ -78,9 +83,9 @@ export default function SettingsButton() {
                 <TextInput
                   value={emailInput}
                   placeholderTextColor={
-                    state.mode === "dark" ? "darkgray" : "lightgray"
+                    mode === "dark" ? "darkgray" : "lightgray"
                   }
-                  style={styles.input(state.mode)}
+                  style={styles.input(mode)}
                   onChangeText={(text) => {
                     setEmailInput(text);
                   }}
@@ -88,26 +93,28 @@ export default function SettingsButton() {
                 />
               </View>
             </View> */}
-            <TouchableOpacity onPress={handleTogglemode}>
-              <View style={styles.settingsRow(state.mode)}>
-                <Text style={styles.settingsLabel(state.mode)}>mode</Text>
-                <View style={styles.iconWrapper}>
-                  <Feather
-                    name={state.mode === "light" ? "sun" : "moon"}
-                    size={30}
-                    color={state.mode === "light" ? "#333" : "#fff"}
-                  />
-                </View>
+            <SettingsMenuRow
+              label="mode"
+              mode={mode}
+              onClick={handleToggleMode}
+            >
+              <View style={styles.iconWrapper}>
+                <Feather
+                  name={mode === "light" ? "sun" : "moon"}
+                  size={30}
+                  color={mode === "light" ? "#333" : "#fff"}
+                />
               </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleToggleColor}>
-              <View style={styles.settingsRow(state.mode)}>
-                <Text style={styles.settingsLabel(state.mode)}>color</Text>
-                <View style={styles.iconWrapper}>
-                  <View style={styles.colorButton(state.color)}></View>
-                </View>
+            </SettingsMenuRow>
+            <SettingsMenuRow
+              label="color"
+              mode={mode}
+              onClick={handleToggleColor}
+            >
+              <View style={styles.iconWrapper}>
+                <View style={styles.colorButton(color)}></View>
               </View>
-            </TouchableOpacity>
+            </SettingsMenuRow>
           </View>
         </View>
       </Modal>
@@ -145,11 +152,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: mode === "dark" ? "#fff" : "#333",
   }),
-  settingsLabel: (mode) => ({
-    fontFamily: "DMSans_400Regular",
-    fontSize: 24,
-    color: mode === "dark" ? "#fff" : "#333",
-  }),
   textInputWrapper: { width: "100%" },
   input: (mode) => ({
     color: mode === "dark" ? "#fff" : "#333",
@@ -162,17 +164,6 @@ const styles = StyleSheet.create({
     fontFamily: "DMSans_400Regular",
   }),
   settingsRows: { width: "100%" },
-  settingsRow: (mode) => ({
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginVertical: 6,
-    padding: 24,
-    borderRadius: 26,
-    backgroundColor:
-      mode === "dark" ? "rgba(256,256,256, 0.05)" : "rgba(0,0,0, 0.05)",
-  }),
   iconWrapper: {
     padding: 0,
   },
