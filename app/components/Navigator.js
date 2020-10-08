@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TodosScreen from "../screens/TodosScreen";
 import ListsScreen from "../screens/ListsScreen";
 import { NavigationContainer } from "@react-navigation/native";
@@ -7,13 +7,17 @@ import { useMgmt } from "../hooks/useMgmt";
 import SettingsButton from "./SettingsButton";
 import ClearDataButton from "./ClearDataButton";
 import { StatusBar } from "expo-status-bar";
-import { initialState } from "../constants/constants";
+import { onLoad } from "../scripts/onLoad";
 
 const Stack = createStackNavigator();
 
 export default function Navigator() {
-  const [{ mode }, setState] = useMgmt();
+  const [state, setState] = useMgmt();
+  const { mode } = state;
   // setState(initialState);
+  useEffect(() => {
+    onLoad(state, setState);
+  }, []);
   return (
     <NavigationContainer>
       <StatusBar style={mode === "dark" ? "light" : "dark"} />

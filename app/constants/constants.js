@@ -3,47 +3,57 @@ export const initialState = {
   color: "purple",
   current: null,
   user: {
-    email: "test@test.com",
+    email: null,
+    isRegistered: false,
   },
   lists: {
     today: {
       id: "today",
       title: "today",
       order: 0,
-      items: [{ id: 2, text: "Pull request", done: false }],
+      items: [
+        { id: 2, text: "Pull request", done: false, createdAt: Date.now() },
+      ],
     },
     tomorrow: {
       id: "tomorrow",
       title: "tomorrow",
       order: 1,
-      items: [{ id: 1, text: "Walk dog", done: false }],
+      items: [{ id: 1, text: "Walk dog", done: false, createdAt: Date.now() }],
     },
     someday: {
       id: "someday",
       title: "someday",
       order: 2,
       items: [
-        { id: 3, text: "Other stuff", done: false },
-        { id: 4, text: "Other thangs", done: false },
+        { id: 3, text: "Other stuff", done: false, createdAt: Date.now() },
+        { id: 4, text: "Other thangs", done: false, createdAt: Date.now() },
       ],
     },
   },
 };
 
 export const emojiSets = {
+  pink: {
+    today: "👛",
+    tomorrow: "🌷",
+    someday: "💘",
+    done: "🍭",
+    checkboxColor: "deeppink",
+  },
   purple: {
     today: "💅",
     tomorrow: "☂️",
     someday: "🔮",
     done: "🕺",
-    checkboxColor: "orchid",
+    checkboxColor: "darkorchid",
   },
   blue: {
     today: "🦋",
     tomorrow: "🌊",
     someday: "🛰",
-    done: "🗳",
-    checkboxColor: "cornflowerblue",
+    done: "🏄🏻‍♂️",
+    checkboxColor: "royalblue",
   },
   green: {
     today: "🍀",

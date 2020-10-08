@@ -1,11 +1,12 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import List from "./List";
 import PropTypes from "prop-types";
 
 export default function ListsList({ lists, handleNavigate }) {
   return (
     <View style={styles.listsList}>
+      <View style={styles.spacer}></View>
       {["today", "tomorrow", "someday"].map((listKey) => (
         <List
           key={lists[listKey].id}
@@ -27,5 +28,8 @@ const styles = StyleSheet.create({
   listsList: {
     width: "100%",
     paddingBottom: 20,
+  },
+  spacer: {
+    height: 20,
   },
 });

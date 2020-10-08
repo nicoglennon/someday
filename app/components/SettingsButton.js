@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 30,
+    borderRadius: 40,
   }),
   topBar: {
     width: "100%",

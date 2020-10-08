@@ -159,7 +159,7 @@ export default function TodoModal({
         isVisible={open}
         onSwipeComplete={handleClose}
         swipeDirection={["down"]}
-        animationInTiming={500}
+        animationInTiming={400}
         backdropTransitionOutTiming={0}
         animationIn={{
           from: {
@@ -285,8 +285,8 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     justifyContent: "center",
     alignItems: "center",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
   }),
   dragbar: {
     width: 50,
@@ -311,6 +311,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 15,
+    marginBottom: 5,
     width: "100%",
   },
   generalButton: {

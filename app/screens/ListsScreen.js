@@ -6,9 +6,10 @@ import { useMgmt } from "../hooks/useMgmt";
 import { useHeaderHeight } from "@react-navigation/stack";
 import TodoModal from "../components/TodoModal";
 import PropTypes from "prop-types";
+import WelcomeModal from "../components/WelcomeModal";
 
 export default function ListsScreen({ navigation }) {
-  const [state, setStorage] = useMgmt();
+  const [{ user, mode, lists }, setStorage] = useMgmt();
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const handleNavigate = async (listId) => {
@@ -23,11 +24,10 @@ export default function ListsScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.safeArea(state.mode)]}>
+    <View style={[styles.safeArea(mode)]}>
       <ScrollView style={{ paddingTop: headerHeight }}>
         <View style={styles.listsScreen}>
-          <Text style={styles.versionText}>1.0</Text>
-          <ListsList lists={state.lists} handleNavigate={handleNavigate} />
+          <ListsList lists={lists} handleNavigate={handleNavigate} />
         </View>
       </ScrollView>
       <AddItemBtn setModalIsOpen={setModalIsOpen} />
@@ -36,6 +36,7 @@ export default function ListsScreen({ navigation }) {
         close={handleCloseNewTodo}
         handleNavigate={handleNavigate}
       />
+      {!user.registered && <WelcomeModal newUser={!user.registered} />}
     </View>
   );
 }

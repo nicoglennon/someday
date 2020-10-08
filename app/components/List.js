@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     textAlign: "left",
     backgroundColor: mode === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
-    borderRadius: 25,
+    borderRadius: 35,
     flexDirection: "row",
     alignItems: "flex-end",
     justifyContent: "space-between",

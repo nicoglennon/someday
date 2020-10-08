@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { View, Text, StyleSheet, Animated } from "react-native";
+import { Text, StyleSheet, Animated } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import PropTypes from "prop-types";
 
