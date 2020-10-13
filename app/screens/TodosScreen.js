@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, ScrollView, Keyboard } from "react-native";
 import TodoList from "../components/TodoList";
 import { useMgmt } from "../hooks/useMgmt";
@@ -12,6 +12,7 @@ export default function TodosScreen() {
   const [inspectedTodo, setInspectedTodo] = useState();
   const headerHeight = useHeaderHeight();
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const scrollRef = useRef();
 
   const handleNavigate = async (listId) => {
     console.log(listId);
@@ -41,9 +42,13 @@ export default function TodosScreen() {
     setInspectedTodo(null);
   };
 
+  const scrollToBottom = () => {
+    scrollRef.current.scrollToEnd({ animated: false });
+  };
+
   return (
     <View style={[styles.safeArea(mode)]}>
-      <ScrollView style={{ paddingTop: headerHeight }}>
+      <ScrollView style={{ paddingTop: headerHeight }} ref={scrollRef}>
         <View style={styles.todosScreen}>
           <View>
             <Text style={styles.listEmoji}>{emojiSets[color][current]}</Text>
@@ -69,6 +74,7 @@ export default function TodosScreen() {
         handleNavigate={handleNavigate}
         prefixedList={current}
         todo={inspectedTodo}
+        scrollToBottom={scrollToBottom}
       />
     </View>
   );
@@ -87,7 +93,7 @@ const styles = StyleSheet.create({
     paddingBottom: 220,
   },
   listEmoji: {
-    fontSize: 70,
+    fontSize: 60,
   },
   listTitleLine: {
     flex: 1,

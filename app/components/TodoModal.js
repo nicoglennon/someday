@@ -14,6 +14,9 @@ import { useMgmt } from "../hooks/useMgmt";
 import shortid from "shortid";
 import PropTypes from "prop-types";
 import { emojiSets } from "../constants/constants";
+import { addDays } from "date-fns";
+import Toast from "react-native-root-toast";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const timeframeOptions = ["today", "tomorrow", "someday"];
 
@@ -22,20 +25,34 @@ const listToTimeframe = {
   tomorrow: 1,
   someday: 2,
 };
+const toastConfig = (mode, insets) => ({
+  duration: Toast.durations.SHORT,
+  position: insets.top + 5,
+  shadow: false,
+  animation: true,
+  hideOnPress: true,
+  opacity: 1,
+  textStyle: styles.toastTextStyle,
+  containerStyle: styles.toastContainerStyle,
+  textColor: mode === "dark" ? "black" : "white",
+  backgroundColor: mode === "dark" ? "#fff" : "#333",
+  delay: 0,
+});
 export default function TodoModal({
   todo,
   open,
   close,
   clearTodo = () => {},
   prefixedList,
+  scrollToBottom = () => {},
 }) {
-  console.log({ todo, prefixedList });
   const [inputText, setInputText] = useState("");
   const [{ lists, mode, color }, setStorage] = useMgmt();
   const [timeframeSelected, setTimeframeSelected] = useState(
     prefixedList ? listToTimeframe[prefixedList] : 0,
   );
-  console.log("timeframeSelected: ", timeframeSelected);
+
+  const insets = useSafeAreaInsets();
   const handleClose = () => {
     close();
   };
@@ -79,11 +96,16 @@ export default function TodoModal({
   };
 
   const handleCreateItem = async () => {
-    const newItem = { text: inputText, done: false, id: shortid.generate() };
     const listToUpdateId = prefixedList || timeframeOptions[timeframeSelected];
+
+    const newItem = {
+      text: inputText,
+      done: false,
+      id: shortid.generate(),
+      day: listToUpdateId === "tomorrow" ? addDays(Date.now(), 1) : Date.now(),
+    };
     const oldListItems = lists[listToUpdateId].items;
     const newListItems = [...oldListItems, newItem];
-    // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     LayoutAnimation.configureNext({
       duration: 500,
       create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
@@ -95,7 +117,14 @@ export default function TodoModal({
         [listToUpdateId]: { ...lists[listToUpdateId], items: newListItems },
       },
     });
+    setTimeout(scrollToBottom, 100);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (!prefixedList) {
+      Toast.show(
+        `added to ${emojiSets[color][listToUpdateId]}`,
+        toastConfig(mode, insets),
+      );
+    }
     handleClose();
   };
 
@@ -106,7 +135,12 @@ export default function TodoModal({
 
     // if we don't have to move the todo to another list
     if (newListId === oldListId) {
-      const newTodo = { text: inputText, done: false, id: todo.id };
+      const newTodo = {
+        text: inputText,
+        done: false,
+        id: todo.id,
+        day: todo.day,
+      };
       const oldListItems = lists[oldListId].items;
 
       const newListItems = oldListItems.map((oldItem) => {
@@ -124,7 +158,12 @@ export default function TodoModal({
         },
       });
     } else {
-      const newTodo = { text: inputText, done: false, id: todo.id };
+      const newTodo = {
+        text: inputText,
+        done: false,
+        id: todo.id,
+        day: newListId === "tomorrow" ? addDays(Date.now(), 1) : Date.now(),
+      };
       const oldListItems = lists[oldListId].items;
 
       const oldListNewItems = oldListItems.filter((oldItem) => {
@@ -135,9 +174,8 @@ export default function TodoModal({
       const newListNewItems = [...newListItems, newTodo];
       LayoutAnimation.configureNext({
         duration: 500,
-        create: { type: "linear", property: "opacity" },
+        create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
         update: { type: "spring", springDamping: 0.7 },
-        // delete: { type: "linear", property: "opacity" },
       });
       await setStorage({
         current: oldListId,
@@ -147,6 +185,10 @@ export default function TodoModal({
           [oldListId]: { ...lists[oldListId], items: oldListNewItems },
         },
       });
+      Toast.show(
+        `moved to ${emojiSets[color][newListId]}`,
+        toastConfig(mode, insets),
+      );
     }
     // after changes
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -272,6 +314,7 @@ TodoModal.propTypes = {
   close: PropTypes.func.isRequired,
   clearTodo: PropTypes.func,
   prefixedList: PropTypes.string,
+  scrollToBottom: PropTypes.func,
 };
 
 const styles = StyleSheet.create({
@@ -345,4 +388,13 @@ const styles = StyleSheet.create({
   createButtonText: (mode) => ({
     color: mode === "dark" ? "#333" : "white",
   }),
+  toastTextStyle: {
+    fontSize: 16,
+    fontFamily: "DMSans_400Regular",
+  },
+  toastContainerStyle: {
+    borderRadius: 20,
+    padding: 10,
+    paddingHorizontal: 14,
+  },
 });

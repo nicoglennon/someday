@@ -1,3 +1,5 @@
+import { addDays } from "date-fns";
+
 export const initialState = {
   mode: "light",
   color: "purple",
@@ -11,23 +13,28 @@ export const initialState = {
       id: "today",
       title: "today",
       order: 0,
-      items: [
-        { id: 2, text: "Pull request", done: false, createdAt: Date.now() },
-      ],
+      items: [{ id: 2, text: "Pull request", done: false, day: Date.now() }],
     },
     tomorrow: {
       id: "tomorrow",
       title: "tomorrow",
       order: 1,
-      items: [{ id: 1, text: "Walk dog", done: false, createdAt: Date.now() }],
+      items: [
+        {
+          id: 1,
+          text: "Walk dog",
+          done: false,
+          day: addDays(Date.now(), 1),
+        },
+      ],
     },
     someday: {
       id: "someday",
       title: "someday",
       order: 2,
       items: [
-        { id: 3, text: "Other stuff", done: false, createdAt: Date.now() },
-        { id: 4, text: "Other thangs", done: false, createdAt: Date.now() },
+        { id: 3, text: "Other stuff", done: false, day: Date.now() },
+        { id: 4, text: "Other thangs", done: false, day: Date.now() },
       ],
     },
   },

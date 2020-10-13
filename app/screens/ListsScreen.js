@@ -48,7 +48,6 @@ ListsScreen.propTypes = {
 const styles = StyleSheet.create({
   safeArea: (mode) => ({
     flex: 1,
-    // justifyContent: "flex-start",
     width: "100%",
     backgroundColor: mode === "dark" ? "black" : null,
   }),
