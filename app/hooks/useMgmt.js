@@ -7,12 +7,11 @@ export const MgmtProvider = ({ initialState, children }) => {
   const [state, setState] = useState(initialState);
 
   const setStorage = async (newState) => {
-    console.log("Setting data async:");
     try {
-      const jsonNewState = JSON.stringify({ ...state, ...newState });
-      console.log("New state:", jsonNewState);
-      await AsyncStorage.setItem("@storage", jsonNewState);
       setState({ ...state, ...newState });
+      const jsonNewState = JSON.stringify({ ...state, ...newState });
+      // console.log("New state:", jsonNewState);
+      await AsyncStorage.setItem("@storage", jsonNewState);
     } catch (e) {
       alert("Error saving state!");
     }

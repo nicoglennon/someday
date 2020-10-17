@@ -1,18 +1,17 @@
-import React, { useState, useRef } from "react";
-import { View, Text, StyleSheet, ScrollView, Keyboard } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Keyboard } from "react-native";
 import TodoList from "../components/TodoList";
 import { useMgmt } from "../hooks/useMgmt";
-import { useHeaderHeight } from "@react-navigation/stack";
 import AddItemBtn from "../components/AddItemBtn";
 import TodoModal from "../components/TodoModal";
 import { emojiSets } from "../constants/constants";
+import { useHeaderHeight } from "@react-navigation/stack";
 
 export default function TodosScreen() {
   const [{ lists, current, mode, color }, setStorage] = useMgmt();
   const [inspectedTodo, setInspectedTodo] = useState();
-  const headerHeight = useHeaderHeight();
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const scrollRef = useRef();
+  const headerHeight = useHeaderHeight();
 
   const handleNavigate = async (listId) => {
     console.log(listId);
@@ -43,29 +42,33 @@ export default function TodosScreen() {
   };
 
   const scrollToBottom = () => {
-    scrollRef.current.scrollToEnd({ animated: false });
+    // scrollRef.current.scrollToEnd({ animated: false });
   };
 
   return (
     <View style={[styles.safeArea(mode)]}>
-      <ScrollView style={{ paddingTop: headerHeight }} ref={scrollRef}>
-        <View style={styles.todosScreen}>
-          <View>
-            <Text style={styles.listEmoji}>{emojiSets[color][current]}</Text>
-            <View style={styles.listTitleLine}>
-              <Text style={styles.listTitle(mode)}>{lists[current].title}</Text>
-              <Text style={styles.listTotal(mode)}>
-                {lists[current].items.length}
-              </Text>
-            </View>
+      <View style={{ height: "100%" }}>
+        <View
+          style={{
+            paddingTop: headerHeight,
+            paddingHorizontal: 15,
+            paddingBottom: 12,
+          }}
+        >
+          <Text style={styles.listEmoji}>{emojiSets[color][current]}</Text>
+          <View style={styles.listTitleLine}>
+            <Text style={styles.listTitle(mode)}>{lists[current].title}</Text>
+            <Text style={styles.listTotal(mode)}>
+              {lists[current].items.length}
+            </Text>
           </View>
-          <TodoList
-            todos={lists[current] ? lists[current].items : []}
-            toggleDone={toggleDone}
-            setTodo={setTodo}
-          />
         </View>
-      </ScrollView>
+        <TodoList
+          todos={lists[current].items}
+          toggleDone={toggleDone}
+          setTodo={setTodo}
+        />
+      </View>
       <AddItemBtn setModalIsOpen={setModalIsOpen} />
       <TodoModal
         open={modalIsOpen}
@@ -87,16 +90,10 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: mode === "dark" ? "black" : null,
   }),
-  todosScreen: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingBottom: 220,
-  },
   listEmoji: {
     fontSize: 60,
   },
   listTitleLine: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",

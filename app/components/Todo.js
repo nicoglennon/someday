@@ -14,7 +14,7 @@ import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
 import { emojiSets } from "../constants/constants";
 
-export default function Todo({ todo, toggleDone, setTodo }) {
+export default function Todo({ todo, toggleDone, setTodo, drag, isDragging }) {
   const [checked, setChecked] = useState(false);
   const [{ mode, color }] = useMgmt();
   const scaleAnim = useRef(new Animated.Value(1)).current;
@@ -24,6 +24,10 @@ export default function Todo({ todo, toggleDone, setTodo }) {
   const handleInspectItem = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setTodo(todo);
+  };
+  const handleDragItem = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    drag();
   };
 
   const handleDeleteItem = () => {
@@ -75,12 +79,15 @@ export default function Todo({ todo, toggleDone, setTodo }) {
       onPress={handleInspectItem}
       onPressIn={animateOnPressInList}
       onPressOut={animateOnPressOutList}
+      onLongPress={handleDragItem}
     >
       <Animated.View
         style={[
           styles.todo(mode),
-          { transform: [{ scale: scaleAnim }, { scale: deleteScaleAnim }] },
-          { opacity: fadeAnim },
+          {
+            transform: [{ scale: scaleAnim }, { scale: deleteScaleAnim }],
+          },
+          { opacity: isDragging ? 0.6 : fadeAnim },
         ]}
       >
         <View style={styles.todoBigChild}>
@@ -113,14 +120,19 @@ Todo.propTypes = {
   todo: PropTypes.object.isRequired,
   toggleDone: PropTypes.func.isRequired,
   setTodo: PropTypes.func.isRequired,
+  drag: PropTypes.func.isRequired,
+  isDragging: PropTypes.bool,
 };
 
 const styles = StyleSheet.create({
-  todo: (mode) => ({
+  todo: (mode, isDragging) => ({
     flex: 1,
     padding: 20,
+    opacity: isDragging ? 0.7 : 1,
     marginTop: 10,
     marginBottom: 0,
+    marginLeft: 15,
+    marginRight: 15,
     textAlign: "left",
     backgroundColor: mode === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     borderRadius: 24,

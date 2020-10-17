@@ -4,10 +4,39 @@ import Todo from "./Todo";
 import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
 import { emojiSets } from "../constants/constants";
+import { useHeaderHeight } from "@react-navigation/stack";
+import DraggableFlatList from "react-native-draggable-flatlist";
+import * as Haptics from "expo-haptics";
 
 export default function TodoList({ todos, toggleDone, setTodo }) {
-  const [{ mode, current, color }] = useMgmt();
-  if (todos.filter((todo) => !todo.done).length === 0) {
+  const [{ mode, lists, current, color }, setState] = useMgmt();
+
+  const reorderItems = ({ data }) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setState({
+      lists: {
+        ...lists,
+        [current]: {
+          ...lists[current],
+          items: data,
+        },
+      },
+    });
+  };
+
+  const renderTodo = ({ item, drag, isActive }) => {
+    return (
+      <Todo
+        key={item.id}
+        todo={item}
+        toggleDone={toggleDone}
+        setTodo={setTodo}
+        drag={drag}
+        isDragging={isActive}
+      />
+    );
+  };
+  if (todos.length === 0) {
     return (
       <View style={styles.emptyTodolist}>
         <View style={styles.emptyTodolistTextWrapper(mode)}>
@@ -20,17 +49,15 @@ export default function TodoList({ todos, toggleDone, setTodo }) {
     );
   }
   return (
-    <View style={styles.todolist}>
-      {todos
-        .filter((todo) => !todo.done)
-        .map((todo) => (
-          <Todo
-            key={todo.id}
-            todo={todo}
-            toggleDone={toggleDone}
-            setTodo={setTodo}
-          />
-        ))}
+    <View style={{ flex: 1 }}>
+      <DraggableFlatList
+        contentContainerStyle={{ paddingBottom: 220 }}
+        ListHeaderComponentStyle={{ marginLeft: 15, marginRight: 15 }}
+        data={todos}
+        renderItem={renderTodo}
+        keyExtractor={(item) => `draggable-item-${item.id}`}
+        onDragEnd={reorderItems}
+      />
     </View>
   );
 }
@@ -46,10 +73,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   emptyTodolist: {
-    width: "100%",
-    height: "100%",
+    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    marginTop: 100,
   },
   emptyTodolistTextWrapper: (mode) => ({
     flexDirection: "row",
@@ -75,5 +101,26 @@ const styles = StyleSheet.create({
     margin: 10,
     color: "gray",
     fontSize: 19,
+  },
+  listTitle: (mode) => ({
+    marginTop: 0,
+    fontSize: 36,
+    fontFamily: "DMSans_700Bold",
+    color: mode === "dark" ? "#fff" : "#333",
+  }),
+  listTotal: (mode) => ({
+    marginTop: 0,
+    fontSize: 30,
+    fontFamily: "DMSans_700Bold",
+    color: mode === "dark" ? "#555" : "lightgrey",
+  }),
+  listEmoji: {
+    fontSize: 60,
+  },
+  listTitleLine: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "baseline",
   },
 });
