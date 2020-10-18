@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, ScrollView, Keyboard } from "react-native";
+import { StyleSheet, View, ScrollView, Keyboard } from "react-native";
 import ListsList from "../components/ListsList";
 import AddItemBtn from "../components/AddItemBtn";
 import { useMgmt } from "../hooks/useMgmt";
@@ -34,7 +34,7 @@ export default function ListsScreen({ navigation }) {
       <TodoModal
         open={modalIsOpen}
         close={handleCloseNewTodo}
-        handleNavigate={handleNavigate}
+        handleNavigate={navigation.navigate}
       />
       {!user.registered && <WelcomeModal newUser={!user.registered} />}
     </View>

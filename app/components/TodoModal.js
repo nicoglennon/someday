@@ -25,12 +25,32 @@ const listToTimeframe = {
   tomorrow: 1,
   someday: 2,
 };
-const toastConfig = (mode, insets) => ({
+const toastConfig = (
+  mode,
+  insets,
+  listToUpdateId,
+  setStorage,
+  newState,
+  handleNavigate,
+) => ({
   duration: Toast.durations.SHORT,
   position: insets.top + 5,
   shadow: false,
   animation: true,
   hideOnPress: true,
+  onPress: async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    !handleNavigate &&
+      LayoutAnimation.configureNext({
+        duration: 200,
+        create: { type: "linear", property: "opacity" },
+      });
+    await setStorage({
+      ...newState,
+      current: listToUpdateId,
+    });
+    handleNavigate && handleNavigate("List");
+  },
   opacity: 1,
   textStyle: styles.toastTextStyle,
   containerStyle: styles.toastContainerStyle,
@@ -45,6 +65,7 @@ export default function TodoModal({
   clearTodo = () => {},
   prefixedList,
   scrollToBottom = () => {},
+  handleNavigate,
 }) {
   const [inputText, setInputText] = useState("");
   const [{ lists, mode, color }, setStorage] = useMgmt();
@@ -110,19 +131,26 @@ export default function TodoModal({
       duration: 500,
       create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
     });
-    await setStorage({
-      current: listToUpdateId,
+    const newState = {
       lists: {
         ...lists,
         [listToUpdateId]: { ...lists[listToUpdateId], items: newListItems },
       },
-    });
+    };
+    await setStorage(newState);
     setTimeout(scrollToBottom, 100);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     if (!prefixedList) {
       Toast.show(
         `added to ${emojiSets[color][listToUpdateId]}`,
-        toastConfig(mode, insets),
+        toastConfig(
+          mode,
+          insets,
+          listToUpdateId,
+          setStorage,
+          newState,
+          handleNavigate,
+        ),
       );
     }
     handleClose();
@@ -151,7 +179,6 @@ export default function TodoModal({
         create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
       });
       await setStorage({
-        current: newListId,
         lists: {
           ...lists,
           [newListId]: { ...lists[newListId], items: newListItems },
@@ -177,17 +204,17 @@ export default function TodoModal({
         create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
         update: { type: "spring", springDamping: 0.7 },
       });
-      await setStorage({
-        current: oldListId,
+      const newState = {
         lists: {
           ...lists,
           [newListId]: { ...lists[newListId], items: newListNewItems },
           [oldListId]: { ...lists[oldListId], items: oldListNewItems },
         },
-      });
+      };
+      await setStorage(newState);
       Toast.show(
         `moved to ${emojiSets[color][newListId]}`,
-        toastConfig(mode, insets),
+        toastConfig(mode, insets, newListId, setStorage, newState),
       );
     }
     // after changes
@@ -315,6 +342,7 @@ TodoModal.propTypes = {
   clearTodo: PropTypes.func,
   prefixedList: PropTypes.string,
   scrollToBottom: PropTypes.func,
+  handleNavigate: PropTypes.func,
 };
 
 const styles = StyleSheet.create({

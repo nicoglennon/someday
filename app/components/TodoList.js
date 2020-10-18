@@ -4,7 +4,6 @@ import Todo from "./Todo";
 import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
 import { emojiSets } from "../constants/constants";
-import { useHeaderHeight } from "@react-navigation/stack";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import * as Haptics from "expo-haptics";
 
@@ -51,7 +50,7 @@ export default function TodoList({ todos, toggleDone, setTodo }) {
   return (
     <View style={{ flex: 1 }}>
       <DraggableFlatList
-        contentContainerStyle={{ paddingBottom: 220 }}
+        contentContainerStyle={{ paddingBottom: 120 }}
         ListHeaderComponentStyle={{ marginLeft: 15, marginRight: 15 }}
         data={todos}
         renderItem={renderTodo}
