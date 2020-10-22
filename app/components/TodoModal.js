@@ -141,6 +141,11 @@ export default function TodoModal({
     setTimeout(scrollToBottom, 100);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     if (!prefixedList) {
+      LayoutAnimation.configureNext({
+        duration: 500,
+        create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
+        update: { type: "spring", springDamping: 0.7 },
+      });
       Toast.show(
         `added to ${emojiSets[color][listToUpdateId]}`,
         toastConfig(
@@ -211,7 +216,13 @@ export default function TodoModal({
           [oldListId]: { ...lists[oldListId], items: oldListNewItems },
         },
       };
+
       await setStorage(newState);
+      LayoutAnimation.configureNext({
+        duration: 500,
+        create: { type: "spring", springDamping: 0.7, property: "scaleXY" },
+        update: { type: "spring", springDamping: 0.7 },
+      });
       Toast.show(
         `moved to ${emojiSets[color][newListId]}`,
         toastConfig(mode, insets, newListId, setStorage, newState),
