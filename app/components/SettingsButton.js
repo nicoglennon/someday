@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import { useMgmt } from "../hooks/useMgmt";
 import * as Haptics from "expo-haptics";
@@ -6,12 +6,13 @@ import { Feather } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import { emojiSets } from "../utils/constants";
 import SettingsMenuRow from "./SettingsMenuRow";
+// import * as MailComposer from "expo-mail-composer";
+import * as Linking from "expo-linking";
 
 const colorsArray = Object.keys(emojiSets);
 
 export default function SettingsButton() {
   const [{ mode, user, color, version }, setStorage] = useMgmt();
-  // const [emailInput, setEmailInput] = useState(user ? user.email : "");
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [selectedColorIndex, setSelectedColorIndex] = useState(
     colorsArray.indexOf(color),
@@ -38,14 +39,35 @@ export default function SettingsButton() {
   const handleCloseModal = () => {
     setSettingsModalOpen(false);
   };
+  // const [isAvailable, setIsAvailable] = useState(false);
+  // const options = {
+  //   recipients: ["nico@someday.im"],
+  //   subject: "feedback for someday 🔮",
+  //   body: "Test",
+  // };
+  // const [emailInput, setEmailInput] = useState(user ? user.email : "");
 
+  // const handleFeedback = async () => {
+  //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  //   await MailComposer.composeAsync(options);
+  // };
+  const handleTwitter = async () => {
+    Linking.openURL("https://twitter.com/nicoglennon");
+  };
+  // useEffect(() => {
+  //   const checkIfAvail = async () => {
+  //     const avail = await MailComposer.isAvailableAsync();
+  //     setIsAvailable(avail);
+  //   };
+  //   checkIfAvail();
+  // }, []);
   return (
     <View>
       <TouchableOpacity onPress={handleOpenModal}>
         <View style={styles.settingsIconWrapper}>
           <Feather
-            name="settings"
-            size={28}
+            name="toggle-left"
+            size={32}
             color={mode === "light" ? "#333" : "#fff"}
           />
         </View>
@@ -115,8 +137,32 @@ export default function SettingsButton() {
               </View>
             </SettingsMenuRow>
             <View style={styles.infoFooter}>
-              <Text style={styles.monoText(mode)}>{user.email}</Text>
-              <Text style={styles.monoText(mode)}>someday V{version}</Text>
+              <View style={styles.infoFooterLeft}>
+                {/* {isAvailable && (
+                  <TouchableOpacity onPress={handleFeedback}>
+                    <View style={styles.contactIconWrapper}>
+                      <Feather
+                        name="mail"
+                        size={28}
+                        color={mode === "light" ? "#333" : "#fff"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )} */}
+                <TouchableOpacity onPress={handleTwitter}>
+                  <View style={styles.contactIconWrapper}>
+                    <Feather
+                      name="twitter"
+                      size={26}
+                      color={mode === "light" ? "#333" : "#fff"}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.infoFooterRight}>
+                <Text style={styles.monoText(mode)}>{user.email}</Text>
+                <Text style={styles.monoText(mode)}>someday v{version}</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -129,6 +175,11 @@ const styles = StyleSheet.create({
   settingsIconWrapper: {
     paddingHorizontal: 15,
     borderRadius: 30,
+  },
+  contactIconWrapper: {
+    opacity: 0.4,
+    marginRight: 10,
+    padding: 5,
   },
   modalContent: (mode) => ({
     backgroundColor: mode === "dark" ? "#14222e" : "#fff",
@@ -182,8 +233,21 @@ const styles = StyleSheet.create({
     fontFamily: "DMSans_400Regular",
   }),
   infoFooter: {
-    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
     paddingHorizontal: 10,
+    paddingTop: 5,
+    paddingBottom: 0,
+  },
+  infoFooterLeft: {
+    flexDirection: "row",
+    paddingBottom: 0,
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+  },
+  infoFooterRight: {
+    alignItems: "flex-end",
     paddingTop: 5,
     paddingBottom: 0,
   },

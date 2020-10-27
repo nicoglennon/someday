@@ -13,5 +13,7 @@
     "sourceType": "module"
   },
   "plugins": ["react", "react-native"],
-  "rules": {}
+  "rules": {
+    "react-native/no-unused-styles": 2
+  }
 }
