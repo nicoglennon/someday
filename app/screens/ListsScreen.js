@@ -56,9 +56,4 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     alignItems: "center",
   },
-  versionText: {
-    color: "lightgrey",
-    fontFamily: "DMSans_700Bold",
-    marginBottom: 10,
-  },
 });

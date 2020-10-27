@@ -7,6 +7,6 @@
  * @return {boolean}
  */
 export const isEmail = (string) => {
-  const matcher = /.+\@.+\..+/;
+  const matcher = /.+@.+\..+/;
   return matcher.test(string);
 };

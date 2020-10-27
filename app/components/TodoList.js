@@ -73,9 +73,6 @@ TodoList.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  todoList: {
-    width: "100%",
-  },
   emptyTodolist: {
     flex: 1,
     alignItems: "center",
@@ -98,33 +95,5 @@ const styles = StyleSheet.create({
     fontSize: 26,
     marginLeft: 5,
     fontFamily: "DMSans_400Regular",
-  },
-  doneTitle: {
-    fontFamily: "DMSans_400Regular",
-    textAlign: "right",
-    margin: 10,
-    color: "gray",
-    fontSize: 19,
-  },
-  listTitle: (mode) => ({
-    marginTop: 0,
-    fontSize: 36,
-    fontFamily: "DMSans_700Bold",
-    color: mode === "dark" ? "#fff" : "#333",
-  }),
-  listTotal: (mode) => ({
-    marginTop: 0,
-    fontSize: 30,
-    fontFamily: "DMSans_700Bold",
-    color: mode === "dark" ? "#555" : "lightgrey",
-  }),
-  listEmoji: {
-    fontSize: 60,
-  },
-  listTitleLine: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "baseline",
   },
 });

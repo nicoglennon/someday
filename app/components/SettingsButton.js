@@ -194,28 +194,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  exitButtonWrapper: (mode) => ({
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: "100",
-    backgroundColor: mode === "dark" ? "#fff" : "#333",
-  }),
   settingsTitle: (mode) => ({
     fontFamily: "DMSans_700Bold",
     fontSize: 28,
     marginBottom: 10,
     color: mode === "dark" ? "#fff" : "#333",
-  }),
-  textInputWrapper: { width: "100%" },
-  input: (mode) => ({
-    color: mode === "dark" ? "#fff" : "#333",
-    backgroundColor: mode === "dark" ? "#1c3740" : "rgba(0,0,0,0.05)",
-    padding: 25,
-    width: "100%",
-    paddingVertical: 20,
-    fontSize: 22,
-    borderRadius: 28,
-    fontFamily: "DMSans_400Regular",
   }),
   settingsRows: { width: "100%" },
   iconWrapper: {
@@ -226,11 +209,6 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 30,
     backgroundColor: emojiSets[color].checkboxColor,
-  }),
-  iconText: (mode) => ({
-    fontSize: 20,
-    color: mode === "dark" ? "#fff" : "#333",
-    fontFamily: "DMSans_400Regular",
   }),
   infoFooter: {
     flexDirection: "row",
