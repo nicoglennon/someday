@@ -8,11 +8,13 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo-google-fonts/dm-mono": "^0.1.0",
     "@expo-google-fonts/dm-sans": "^0.1.0",
     "@react-native-community/async-storage": "~1.11.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.6.1",
     "@react-navigation/stack": "^5.6.2",
+    "base-64": "^1.0.0",
     "date-fns": "^2.16.1",
     "expo": "^38.0.10",
     "expo-font": "~8.2.1",

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 const MgmtContext = React.createContext();
 import PropTypes from "prop-types";
 

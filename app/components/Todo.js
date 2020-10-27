@@ -12,7 +12,7 @@ import * as Haptics from "expo-haptics";
 import { Easing } from "react-native-reanimated";
 import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
-import { emojiSets } from "../constants/constants";
+import { emojiSets } from "../utils/constants";
 
 export default function Todo({ todo, toggleDone, setTodo, drag, isDragging }) {
   const [checked, setChecked] = useState(false);
@@ -99,7 +99,7 @@ export default function Todo({ todo, toggleDone, setTodo, drag, isDragging }) {
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               setChecked(true);
-              setTimeout(handleDeleteItem, 400);
+              setTimeout(handleDeleteItem, 200);
             }}
             onPressIn={animateOnPressInList}
             onPressOut={animateOnPressOutList}

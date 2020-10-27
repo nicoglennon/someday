@@ -13,7 +13,7 @@ import * as Haptics from "expo-haptics";
 import { useMgmt } from "../hooks/useMgmt";
 import shortid from "shortid";
 import PropTypes from "prop-types";
-import { emojiSets } from "../constants/constants";
+import { emojiSets } from "../utils/constants";
 import { addDays } from "date-fns";
 import Toast from "react-native-root-toast";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

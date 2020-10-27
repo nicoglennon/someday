@@ -7,17 +7,49 @@ import {
   Animated,
   Keyboard,
   ActivityIndicator,
+  Button,
 } from "react-native";
 import Modal from "react-native-modal";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import * as Haptics from "expo-haptics";
 import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
+import Constants from "expo-constants";
+import { encode as btoa } from "base-64";
+import { isEmail } from "../utils/helpers";
+import { Feather } from "@expo/vector-icons";
+
+const apiKey = Constants.manifest.extra.MAILCHIMP_API_KEY;
+const listId = Constants.manifest.extra.MAILCHIMP_LIST_ID;
+const server = Constants.manifest.extra.MAILCHIMP_SERVER_PREFIX;
+
+const registerEmail = (email) => {
+  const url =
+    "https://" + server + ".api.mailchimp.com/3.0/lists/" + listId + "/members";
+  const method = "POST";
+  const headers = {
+    authorization: "Basic " + btoa("randomstring:" + apiKey),
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  };
+  const body = JSON.stringify({
+    email_address: email,
+    status: "subscribed",
+  });
+
+  return fetch(url, {
+    method,
+    headers,
+    body,
+  });
+};
 
 export default function WelcomeModal({ newUser }) {
   const [inputText, setInputText] = useState("");
   const [{ user = {}, mode }, setState] = useMgmt();
-  const [loading, setLoading] = useState(false);
+  const [showIcons, setShowIcons] = useState(false);
+  const [processing, setProcessing] = useState(true);
+  const [emailValidated, setEmailValidated] = useState(false);
 
   const [open, setOpen] = useState(newUser);
 
@@ -38,17 +70,36 @@ export default function WelcomeModal({ newUser }) {
     }).start();
   };
 
+  const TEST_skip = () => {
+    setState({ user: { ...user, registered: true, email: inputText } });
+    setOpen(false);
+  };
   const handleClose = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
-    setLoading(true);
+    setShowIcons(true);
+    setTimeout(() => {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      setProcessing(false);
+    }, 2000);
     setTimeout(() => {
       setOpen(false);
-    }, 2000);
+    }, 3000);
+    try {
+      await registerEmail(inputText.toLowerCase());
+    } catch (err) {
+      // ignore err
+    }
   };
 
   const handleRegisterUser = () => {
-    setState({ user: { ...user, registered: true } });
+    setState({
+      user: { ...user, registered: true, email: inputText.toLowerCase() },
+    });
+  };
+
+  const checkIfEmail = (email) => {
+    setEmailValidated(isEmail(email));
   };
   return (
     <View>
@@ -56,18 +107,22 @@ export default function WelcomeModal({ newUser }) {
         testID={"welcomeModal"}
         isVisible={open}
         onSwipeComplete={handleClose}
-        animationInTiming={1}
+        swi
+        animationInTiming={1000}
+        animationIn="fadeIn"
+        // animationOut="fadeOut"
         animationOutTiming={1000}
+        backdropTransitionInTiming={1}
         backdropTransitionOutTiming={0}
         style={styles.modal}
-        backdropColor="#fff"
+        backdropColor="white"
+        backdropOpacity={1}
         avoidKeyboard
         onModalHide={handleRegisterUser}
-        backdropOpacity={0.95}
       >
         <View style={styles.content(mode)}>
           <View style={styles.topBanner}>
-            <Text style={styles.welcomeTextSmall}>🔮</Text>
+            <Text style={styles.welcomeTextEmoji}>🔮</Text>
             <Text style={styles.welcomeText}>someday</Text>
             <View style={styles.textInputWrapper}>
               <TextInput
@@ -78,20 +133,21 @@ export default function WelcomeModal({ newUser }) {
                 style={styles.input(mode)}
                 onChangeText={(text) => {
                   setInputText(text);
+                  checkIfEmail(text);
                 }}
-                placeholder="your email..."
+                placeholder="your@email.com"
               />
             </View>
             <TouchableOpacity
               onPress={handleClose}
               onPressIn={() => animateOnPressIn(submitScaleAnim)}
               onPressOut={() => animateOnPressOut(submitScaleAnim)}
-              disabled={loading}
+              disabled={showIcons || !emailValidated}
             >
               <Animated.View
                 style={[
                   styles.generalButton,
-                  styles.createButton(mode),
+                  styles.createButton(mode, emailValidated),
                   { transform: [{ scale: submitScaleAnim }] },
                 ]}
               >
@@ -101,15 +157,20 @@ export default function WelcomeModal({ newUser }) {
                     styles.createButtonText(mode),
                   ]}
                 >
-                  let&apos;s go
+                  let&apos;s go!
                 </Text>
-                {loading && (
+                {showIcons && (
                   <View style={styles.spinnerWrapper}>
-                    <ActivityIndicator size="large" />
+                    {processing ? (
+                      <ActivityIndicator size="large" />
+                    ) : (
+                      <Feather name="check" size={28} color="#fff" />
+                    )}
                   </View>
                 )}
               </Animated.View>
             </TouchableOpacity>
+            <Button title="Skip" onPress={TEST_skip} />
           </View>
         </View>
       </Modal>
@@ -143,16 +204,16 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   }),
-  welcomeTextSmall: {
+  welcomeTextEmoji: {
     fontFamily: "DMSans_400Regular",
     fontSize: 50,
     textAlign: "center",
   },
   welcomeText: {
     fontFamily: "DMSans_700Bold",
-    fontSize: 32,
+    fontSize: 38,
     textAlign: "center",
-    marginBottom: 22,
+    marginBottom: 24,
   },
   textInputWrapper: { flexDirection: "row", marginBottom: 20 },
   input: (mode) => ({
@@ -161,9 +222,10 @@ const styles = StyleSheet.create({
     backgroundColor: mode === "dark" ? "#14222e" : "rgba(0,0,0,0.05)",
     padding: 25,
     paddingVertical: 30,
-    fontSize: 22,
+    fontSize: 20,
     borderRadius: 28,
-    fontFamily: "DMSans_400Regular",
+    fontFamily: "DMMono_400Regular",
+    textAlign: "center",
   }),
   generalButton: {
     padding: 20,
@@ -180,9 +242,10 @@ const styles = StyleSheet.create({
     fontFamily: "DMSans_700Bold",
     color: mode === "dark" ? "#fff" : "#333",
   }),
-  createButton: (mode) => ({
+  createButton: (mode, emailValidated) => ({
     backgroundColor: mode === "dark" ? "white" : "#333",
     borderColor: mode === "dark" ? "white" : "#333",
+    opacity: emailValidated ? 1 : 0.7,
   }),
   createButtonText: (mode) => ({
     color: mode === "dark" ? "#333" : "white",

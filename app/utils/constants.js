@@ -4,6 +4,7 @@ export const initialState = {
   mode: "light",
   color: "purple",
   current: null,
+  version: "1.0",
   user: {
     email: null,
     isRegistered: false,

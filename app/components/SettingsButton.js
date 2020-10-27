@@ -4,14 +4,13 @@ import { useMgmt } from "../hooks/useMgmt";
 import * as Haptics from "expo-haptics";
 import { Feather } from "@expo/vector-icons";
 import Modal from "react-native-modal";
-import { TextInput } from "react-native-gesture-handler";
-import { emojiSets } from "../constants/constants";
+import { emojiSets } from "../utils/constants";
 import SettingsMenuRow from "./SettingsMenuRow";
 
 const colorsArray = Object.keys(emojiSets);
 
 export default function SettingsButton() {
-  const [{ mode, user, color }, setStorage] = useMgmt();
+  const [{ mode, user, color, version }, setStorage] = useMgmt();
   // const [emailInput, setEmailInput] = useState(user ? user.email : "");
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [selectedColorIndex, setSelectedColorIndex] = useState(
@@ -115,6 +114,10 @@ export default function SettingsButton() {
                 <View style={styles.colorButton(color)}></View>
               </View>
             </SettingsMenuRow>
+            <View style={styles.infoFooter}>
+              <Text style={styles.monoText(mode)}>{user.email}</Text>
+              <Text style={styles.monoText(mode)}>someday V{version}</Text>
+            </View>
           </View>
         </View>
       </Modal>
@@ -177,5 +180,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: mode === "dark" ? "#fff" : "#333",
     fontFamily: "DMSans_400Regular",
+  }),
+  infoFooter: {
+    alignItems: "center",
+    paddingHorizontal: 10,
+    paddingTop: 5,
+    paddingBottom: 0,
+  },
+  monoText: (mode) => ({
+    marginTop: 5,
+    fontFamily: "DMMono_400Regular",
+    color: mode === "dark" ? "#fff" : "#333",
+    fontSize: 13,
+    opacity: 0.4,
   }),
 });

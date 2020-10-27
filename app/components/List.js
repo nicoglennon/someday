@@ -9,7 +9,7 @@ import {
 import { useMgmt } from "../hooks/useMgmt";
 import * as Haptics from "expo-haptics";
 import PropTypes from "prop-types";
-import { emojiSets } from "../constants/constants";
+import { emojiSets } from "../utils/constants";
 
 export default function List({ list, handleNavigate }) {
   const [{ mode, color }] = useMgmt();
@@ -46,15 +46,13 @@ export default function List({ list, handleNavigate }) {
           <Text style={styles.listEmoji}>{emojiSets[color][list.id]}</Text>
           <Text style={styles.listText(mode)}>{list.title}</Text>
         </View>
-        {list.id !== "someday" && (
-          <View style={styles.listChild}>
-            <View style={styles.listBadge}>
-              <Text style={[styles.listText(mode), styles.badgeText]}>
-                {list.items.filter((item) => !item.done).length}
-              </Text>
-            </View>
+        <View style={styles.listChild}>
+          <View style={styles.listBadge}>
+            <Text style={[styles.listText(mode), styles.badgeText]}>
+              {list.items.filter((item) => !item.done).length}
+            </Text>
           </View>
-        )}
+        </View>
       </Animated.View>
     </TouchableOpacity>
   );

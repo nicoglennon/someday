@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from "react-native";
 import Todo from "./Todo";
 import { useMgmt } from "../hooks/useMgmt";
 import PropTypes from "prop-types";
-import { emojiSets } from "../constants/constants";
+import { emojiSets } from "../utils/constants";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import * as Haptics from "expo-haptics";
 
@@ -48,7 +48,11 @@ export default function TodoList({ todos, toggleDone, setTodo }) {
     );
   }
   return (
-    <View style={{ flex: 1 }}>
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
       <DraggableFlatList
         contentContainerStyle={{ paddingBottom: 120 }}
         ListHeaderComponentStyle={{ marginLeft: 15, marginRight: 15 }}
@@ -56,6 +60,7 @@ export default function TodoList({ todos, toggleDone, setTodo }) {
         renderItem={renderTodo}
         keyExtractor={(item) => `draggable-item-${item.id}`}
         onDragEnd={reorderItems}
+        dragItemOverflow={true}
       />
     </View>
   );

@@ -4,7 +4,7 @@ import TodoList from "../components/TodoList";
 import { useMgmt } from "../hooks/useMgmt";
 import AddItemBtn from "../components/AddItemBtn";
 import TodoModal from "../components/TodoModal";
-import { emojiSets } from "../constants/constants";
+import { emojiSets } from "../utils/constants";
 import { useHeaderHeight } from "@react-navigation/stack";
 
 export default function TodosScreen() {
