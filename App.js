@@ -44,7 +44,7 @@ export default function App() {
     DMMono_400Regular,
   });
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || !dataLoaded) {
     return <AppLoading />;
   } else {
     LayoutAnimation.configureNext({
