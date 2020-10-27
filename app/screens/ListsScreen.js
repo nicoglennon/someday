@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   safeArea: (mode) => ({
     flex: 1,
     width: "100%",
-    backgroundColor: mode === "dark" ? "black" : null,
+    backgroundColor: mode === "dark" ? "black" : "white",
   }),
   listsScreen: {
     paddingLeft: 15,

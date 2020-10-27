@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     width: "100%",
-    backgroundColor: mode === "dark" ? "black" : null,
+    backgroundColor: mode === "dark" ? "black" : "white",
   }),
   listEmoji: {
     fontSize: 60,

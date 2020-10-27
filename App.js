@@ -12,13 +12,14 @@ import {
 } from "@expo-google-fonts/dm-sans";
 
 import { DMMono_400Regular } from "@expo-google-fonts/dm-mono";
+import { LayoutAnimation } from "react-native";
 
 const getDataASync = async () => {
   console.log("Getting data async:");
   try {
     const jsonValue = await AsyncStorage.getItem("@storage");
     console.log("stored data:", jsonValue);
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
+    return jsonValue !== null ? JSON.parse(jsonValue) : null;
   } catch (e) {
     // error reading value
     alert("Error reading state!");
@@ -45,11 +46,15 @@ export default function App() {
 
   if (!fontsLoaded) {
     return <AppLoading />;
+  } else {
+    LayoutAnimation.configureNext({
+      duration: 500,
+      create: { type: "spring", property: "scaleXY", springDamping: 0.8 },
+    });
+    return (
+      <MgmtProvider initialState={dataLoaded ? dataLoaded : initialState}>
+        <Navigator />
+      </MgmtProvider>
+    );
   }
-
-  return (
-    <MgmtProvider initialState={dataLoaded ? dataLoaded : initialState}>
-      <Navigator />
-    </MgmtProvider>
-  );
 }
