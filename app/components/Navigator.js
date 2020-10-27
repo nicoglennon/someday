@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useMgmt } from "../hooks/useMgmt";
 import SettingsButton from "./SettingsButton";
-import ClearDataButton from "./ClearDataButton";
+// import ClearDataButton from "./ClearDataButton";
 import { StatusBar } from "expo-status-bar";
 import { onLoad } from "../scripts/onLoad";
 
@@ -39,7 +39,7 @@ export default function Navigator() {
             // eslint-disable-next-line react/display-name
             headerRight: () => <SettingsButton />,
             // eslint-disable-next-line react/display-name
-            headerLeft: () => <ClearDataButton />,
+            // headerLeft: () => <ClearDataButton />,
           }}
         />
         <Stack.Screen

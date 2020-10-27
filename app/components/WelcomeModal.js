@@ -7,7 +7,7 @@ import {
   Animated,
   Keyboard,
   ActivityIndicator,
-  Button,
+  // Button,
 } from "react-native";
 import Modal from "react-native-modal";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -70,10 +70,10 @@ export default function WelcomeModal({ newUser }) {
     }).start();
   };
 
-  const TEST_skip = () => {
-    setState({ user: { ...user, registered: true, email: inputText } });
-    setOpen(false);
-  };
+  // const TEST_skip = () => {
+  //   setState({ user: { ...user, registered: true, email: inputText } });
+  //   setOpen(false);
+  // };
   const handleClose = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Keyboard.dismiss();
@@ -168,7 +168,7 @@ export default function WelcomeModal({ newUser }) {
                 )}
               </Animated.View>
             </TouchableOpacity>
-            <Button title="Skip" onPress={TEST_skip} />
+            {/* <Button title="Skip" onPress={TEST_skip} /> */}
           </View>
         </View>
       </Modal>
