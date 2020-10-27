@@ -107,10 +107,8 @@ export default function WelcomeModal({ newUser }) {
         testID={"welcomeModal"}
         isVisible={open}
         onSwipeComplete={handleClose}
-        swi
         animationInTiming={1000}
-        animationIn="fadeIn"
-        // animationOut="fadeOut"
+        animationIn="bounceIn"
         animationOutTiming={1000}
         backdropTransitionInTiming={1}
         backdropTransitionOutTiming={0}
