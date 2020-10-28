@@ -71,7 +71,9 @@ export default function WelcomeModal({ newUser }) {
   };
 
   // const TEST_skip = () => {
-  //   setState({ user: { ...user, registered: true, email: inputText } });
+  //   setState({
+  //     user: { ...user, registered: true, email: "example@test.com" },
+  //   });
   //   setOpen(false);
   // };
   const handleClose = async () => {
