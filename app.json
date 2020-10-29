@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "experi",
-    "slug": "experi",
+    "name": "someday",
+    "slug": "someday",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/someday.png",
@@ -11,7 +11,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "gl.nico.someday",
-      "buildNumber": "1.0.0"
+      "buildNumber": "2"
     },
     "web": {
       "favicon": "./assets/favicon.png"
