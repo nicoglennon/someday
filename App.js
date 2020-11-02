@@ -19,7 +19,7 @@ const getDataASync = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem("@storage");
     console.log("stored data:", jsonValue);
-    return jsonValue !== null ? JSON.parse(jsonValue) : null;
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
   } catch (e) {
     // error reading value
     alert("Error reading state!");
@@ -27,12 +27,12 @@ const getDataASync = async () => {
 };
 
 export default function App() {
-  const [dataLoaded, setDataLoaded] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState({ ready: false, data: null });
 
   useEffect(() => {
     const loadData = async () => {
       const loadedData = await getDataASync();
-      setDataLoaded(loadedData);
+      setDataLoaded({ data: loadedData, ready: true });
     };
 
     loadData();
@@ -44,15 +44,17 @@ export default function App() {
     DMMono_400Regular,
   });
 
-  if (!fontsLoaded || !dataLoaded) {
+  if (!fontsLoaded || !dataLoaded.ready) {
     return <AppLoading />;
   } else {
     LayoutAnimation.configureNext({
-      duration: 500,
-      create: { type: "spring", property: "scaleXY", springDamping: 0.8 },
+      duration: 400,
+      create: { type: "spring", springDamping: 0.8, property: "scaleXY" },
     });
     return (
-      <MgmtProvider initialState={dataLoaded ? dataLoaded : initialState}>
+      <MgmtProvider
+        initialState={dataLoaded.data ? dataLoaded.data : initialState}
+      >
         <Navigator />
       </MgmtProvider>
     );

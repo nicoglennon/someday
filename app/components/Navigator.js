@@ -14,7 +14,6 @@ const Stack = createStackNavigator();
 export default function Navigator() {
   const [state, setState] = useMgmt();
   const { mode } = state;
-  // setState(initialState);
   useEffect(() => {
     onLoad(state, setState);
   }, []);

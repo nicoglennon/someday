@@ -7,7 +7,7 @@ import {
   Animated,
   Keyboard,
   ActivityIndicator,
-  // Button,
+  Button,
 } from "react-native";
 import Modal from "react-native-modal";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -111,6 +111,7 @@ export default function WelcomeModal({ newUser }) {
         onSwipeComplete={handleClose}
         animationInTiming={1000}
         animationIn="bounceIn"
+        animationOut="fadeOut"
         animationOutTiming={1000}
         backdropTransitionInTiming={1}
         backdropTransitionOutTiming={0}
@@ -120,7 +121,7 @@ export default function WelcomeModal({ newUser }) {
         avoidKeyboard
         onModalHide={handleRegisterUser}
       >
-        <View style={styles.content(mode)}>
+        <View style={styles.content}>
           <View style={styles.topBanner}>
             <Text style={styles.welcomeTextEmoji}>🔮</Text>
             <Text style={styles.welcomeText}>someday</Text>
@@ -193,17 +194,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
   },
-  content: (mode) => ({
+  content: {
     flexDirection: "row",
-    backgroundColor: mode === "dark" ? "black" : "white",
+    backgroundColor: "white",
     padding: 25,
     paddingTop: 15,
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-  }),
+  },
   welcomeTextEmoji: {
     fontFamily: "DMSans_400Regular",
     fontSize: 50,

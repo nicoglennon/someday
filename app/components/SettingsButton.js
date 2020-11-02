@@ -6,13 +6,14 @@ import { Feather } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import { emojiSets } from "../utils/constants";
 import SettingsMenuRow from "./SettingsMenuRow";
-// import * as MailComposer from "expo-mail-composer";
+import * as MailComposer from "expo-mail-composer";
 import * as Linking from "expo-linking";
+import Constants from "expo-constants";
 
 const colorsArray = Object.keys(emojiSets);
 
 export default function SettingsButton() {
-  const [{ mode, user, color, version }, setStorage] = useMgmt();
+  const [{ mode, user, color }, setStorage] = useMgmt();
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
   const [selectedColorIndex, setSelectedColorIndex] = useState(
     colorsArray.indexOf(color),
@@ -39,34 +40,34 @@ export default function SettingsButton() {
   const handleCloseModal = () => {
     setSettingsModalOpen(false);
   };
-  // const [isAvailable, setIsAvailable] = useState(false);
-  // const options = {
-  //   recipients: ["nico@someday.im"],
-  //   subject: "feedback for someday 🔮",
-  //   body: "Test",
-  // };
+  const [isAvailable, setIsAvailable] = useState(false);
+  const options = {
+    recipients: ["nico@someday.im"],
+    subject: "feedback for someday 🔮",
+    body: "",
+  };
   // const [emailInput, setEmailInput] = useState(user ? user.email : "");
 
-  // const handleFeedback = async () => {
-  //   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-  //   await MailComposer.composeAsync(options);
-  // };
+  const handleFeedback = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    await MailComposer.composeAsync(options);
+  };
   const handleTwitter = async () => {
     Linking.openURL("https://twitter.com/nicoglennon");
   };
-  // useEffect(() => {
-  //   const checkIfAvail = async () => {
-  //     const avail = await MailComposer.isAvailableAsync();
-  //     setIsAvailable(avail);
-  //   };
-  //   checkIfAvail();
-  // }, []);
+  useEffect(() => {
+    const checkIfAvail = async () => {
+      const avail = await MailComposer.isAvailableAsync();
+      setIsAvailable(avail);
+    };
+    checkIfAvail();
+  }, []);
   return (
     <View>
       <TouchableOpacity onPress={handleOpenModal}>
         <View style={styles.settingsIconWrapper}>
           <Feather
-            name="toggle-left"
+            name="settings"
             size={32}
             color={mode === "light" ? "#333" : "#fff"}
           />
@@ -138,17 +139,6 @@ export default function SettingsButton() {
             </SettingsMenuRow>
             <View style={styles.infoFooter}>
               <View style={styles.infoFooterLeft}>
-                {/* {isAvailable && (
-                  <TouchableOpacity onPress={handleFeedback}>
-                    <View style={styles.contactIconWrapper}>
-                      <Feather
-                        name="mail"
-                        size={28}
-                        color={mode === "light" ? "#333" : "#fff"}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )} */}
                 <TouchableOpacity onPress={handleTwitter}>
                   <View style={styles.contactIconWrapper}>
                     <Feather
@@ -158,10 +148,24 @@ export default function SettingsButton() {
                     />
                   </View>
                 </TouchableOpacity>
+                {isAvailable && (
+                  <TouchableOpacity onPress={handleFeedback}>
+                    <View style={styles.contactIconWrapper}>
+                      <Feather
+                        name="mail"
+                        size={28}
+                        color={mode === "light" ? "#333" : "#fff"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                )}
               </View>
+
               <View style={styles.infoFooterRight}>
                 <Text style={styles.monoText(mode)}>{user.email}</Text>
-                <Text style={styles.monoText(mode)}>someday v{version}</Text>
+                <Text style={styles.monoText(mode)}>
+                  someday v{Constants.nativeAppVersion}
+                </Text>
               </View>
             </View>
           </View>
@@ -178,7 +182,7 @@ const styles = StyleSheet.create({
   },
   contactIconWrapper: {
     opacity: 0.4,
-    marginRight: 10,
+    marginRight: 5,
     padding: 5,
   },
   modalContent: (mode) => ({
