@@ -17,6 +17,7 @@
     "base-64": "^1.0.0",
     "date-fns": "^2.16.1",
     "expo": "^38.0.10",
+    "expo-asset": "~8.1.7",
     "expo-font": "~8.2.1",
     "expo-haptics": "~8.2.1",
     "expo-mail-composer": "~8.2.1",

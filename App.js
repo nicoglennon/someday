@@ -3,22 +3,22 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { MgmtProvider } from "./app/hooks/useMgmt";
 import Navigator from "./app/components/Navigator";
 import { initialState } from "./app/utils/constants";
-
+import CrystalBall from "./app/assets/someday.png";
 import { AppLoading } from "expo";
 import {
   useFonts,
   DMSans_400Regular,
   DMSans_700Bold,
 } from "@expo-google-fonts/dm-sans";
-
+import { Asset } from "expo-asset";
 import { DMMono_400Regular } from "@expo-google-fonts/dm-mono";
 import { LayoutAnimation } from "react-native";
 
 const getDataASync = async () => {
-  console.log("Getting data async:");
+  // console.log("Getting data async:");
   try {
     const jsonValue = await AsyncStorage.getItem("@storage");
-    console.log("stored data:", jsonValue);
+    // console.log("stored data:", jsonValue);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
   } catch (e) {
     // error reading value
@@ -31,6 +31,7 @@ export default function App() {
 
   useEffect(() => {
     const loadData = async () => {
+      await Asset.fromModule(CrystalBall).downloadAsync();
       const loadedData = await getDataASync();
       setDataLoaded({ data: loadedData, ready: true });
     };

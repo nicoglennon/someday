@@ -7,7 +7,8 @@ import {
   Animated,
   Keyboard,
   ActivityIndicator,
-  Button,
+  // Button,
+  Image,
 } from "react-native";
 import Modal from "react-native-modal";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -18,6 +19,7 @@ import Constants from "expo-constants";
 import { encode as btoa } from "base-64";
 import { isEmail } from "../utils/helpers";
 import { Feather } from "@expo/vector-icons";
+import CrystalBall from "../assets/someday.png";
 
 const apiKey = Constants.manifest.extra.MAILCHIMP_API_KEY;
 const listId = Constants.manifest.extra.MAILCHIMP_LIST_ID;
@@ -123,7 +125,14 @@ export default function WelcomeModal({ newUser }) {
       >
         <View style={styles.content}>
           <View style={styles.topBanner}>
-            <Text style={styles.welcomeTextEmoji}>🔮</Text>
+            <View style={{ alignItems: "center" }}>
+              <Image
+                source={CrystalBall}
+                height={100}
+                width={100}
+                style={{ width: 80, height: 80, borderRadius: 20 }}
+              />
+            </View>
             <Text style={styles.welcomeText}>someday</Text>
             <View style={styles.textInputWrapper}>
               <TextInput
@@ -202,11 +211,6 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-  },
-  welcomeTextEmoji: {
-    fontFamily: "DMSans_400Regular",
-    fontSize: 50,
-    textAlign: "center",
   },
   welcomeText: {
     fontFamily: "DMSans_700Bold",
