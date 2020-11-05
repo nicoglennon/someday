@@ -128,9 +128,9 @@ export default function WelcomeModal({ newUser }) {
             <View style={{ alignItems: "center" }}>
               <Image
                 source={CrystalBall}
-                height={100}
-                width={100}
-                style={{ width: 80, height: 80, borderRadius: 20 }}
+                height={80}
+                width={80}
+                style={{ width: 70, height: 70, borderRadius: 20 }}
               />
             </View>
             <Text style={styles.welcomeText}>someday</Text>
