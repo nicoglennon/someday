@@ -15,7 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "gl.nico.someday",
-      "buildNumber": "4"
+      "buildNumber": "5"
     },
     "web": {
       "favicon": "./assets/favicon.png"
