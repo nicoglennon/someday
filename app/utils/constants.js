@@ -13,7 +13,7 @@ export const initialState = {
       id: "today",
       title: "today",
       order: 0,
-      items: [{ id: 2, text: "Pull request", done: false, day: Date.now() }],
+      items: [{ id: 2, text: "call bestie", done: false, day: Date.now() }],
     },
     tomorrow: {
       id: "tomorrow",
@@ -22,7 +22,7 @@ export const initialState = {
       items: [
         {
           id: 1,
-          text: "Walk dog",
+          text: "learn about bitcoin",
           done: false,
           day: addDays(Date.now(), 1),
         },
@@ -33,8 +33,7 @@ export const initialState = {
       title: "someday",
       order: 2,
       items: [
-        { id: 3, text: "Other stuff", done: false, day: Date.now() },
-        { id: 4, text: "Other thangs", done: false, day: Date.now() },
+        { id: 3, text: "go to mars with elon", done: false, day: Date.now() },
       ],
     },
   },
